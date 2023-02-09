@@ -1,0 +1,2028 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{tikz}
+\title{Classical Real Analysis Notes}
+\author{Zhikun Li}
+\date{}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\p}{\mathcal{P}}
+\newcommand{\ucov}{\rightrightarrows}
+\newcommand{\mdec}{\searrow}
+\newcommand{\minc}{\nearrow}
+\newcommand{\infsum}{\sum\limits_{n=1}^\infty}
+\newcommand{\sumkn}{\sum_{k=1}^n}
+\newcommand{\infprod}{\prod\limits_{n=1}^\infty}
+\newcommand{\limninf}{\lim\limits_{n\to\infty}}
+\newcommand{\limxinf}{\lim\limits_{x\to\infty}}
+\newcommand{\limxx}{\lim_{x\to x_0}}
+\newcommand{\difx}{\dfrac{\mbox{d}}{\mbox{d}x}}
+\newcommand{\dift}{\dfrac{\mbox{d}}{\mbox{d}t}}
+\newcommand{\st}{\mbox{ s.t. }}
+\newcommand{\he}{\mbox{ and }}
+\newcommand{\theorem}{\textbf{Theorem:}}
+\newcommand{\clear}{\mbox{Clearly: }}
+\newcommand{\trivial}{\mbox{Trivially: }}
+\newcommand{\wlg}{\mbox{ WLoG, let }}
+\newcommand{\diam}{\mbox{diam}}
+\newcommand{\0}{{\bf{0}}}
+\newcommand{\bs}{\symbol{92}}
+
+\begin{document}
+
+\maketitle
+This document directly follows after page 14 of the Google slides of "Analysis comprehensive notes"
+\tableofcontents
+\clearpage
+\section{General Concepts}
+\subsection{Basic Set Theory}
+\subsubsection{Cardinality}
+{\textit{\textbf{Definition:}}}
+$$(\mbox{card}(X)\le\mbox{card}Y):=\exists{}Z\subset{}Y(\mbox{card}(X)=\mbox{card}Z)$$
+Leading to:
+\begin{itemize}
+    \item $(\mbox{card}X\le\mbox{card}Y)\land(\mbox{card}Y\le\mbox{card}Z)\implies(\mbox{card}X\le\mbox{card}Z)$
+    \item $(\mbox{card}X\le\mbox{card}Y)\land(\mbox{card}Y\le\mbox{card}X)\implies$ exists a bijection between $X$ and $Y$ (the Schroder-Bernstein Theorem)
+    \item $\forall{}X,Y:(\mbox{card}X\le\mbox{card}Y)\lor(\mbox{card}Y\le\mbox{card}X)$({\textit{Principle of Cardinal Comparability $\iff$ Axiom of Choice}})
+\end{itemize}
+{\textbf{Proof for the Schroder-Bernstein Theorem}}\\
+Let $A$ and $B$ be any two disjoint set, $f$ be an injection form set $A$ to $B$,  $g$ be an injection from $B$ to $A$, then, $\forall{}a\in{}A$, there is a sequence:
+$$\dots\to{}f^{-1}(g^{-1}(a))\to{}g^{-1}(a)\to{}a\to{}f(a)\to{}g(f(a))\to\dots$$
+This sequence may terminate on the left, but never on the right (Injection both ways $\implies$ every element in each set gets mapped to the other set)
+As mappings are deterministic, each element can not exist in two mappings. Thus, the sequences are all disjoint, and if there exists a Bijection for each sequence, then the initial statement is trivially true.
+If a sequence terminates in $A$, then let $f$ be the Bijection (same for $B$ and $g$), if a sequence does not terminate, then both $f$ and $g$ are Bijections. $\square$
+\subsubsection{Ordering}
+A Partial Order Relation is a homogeneous relation that is transitive and antisymmetric.\\
+\textbf{Non-strict(reflexive) Partial Order:}
+Homogeneous relations $\le$ on a set $P$ s.t. $\forall a,b,c\in P$:
+\begin{itemize}
+    \item \textbf{Reflexivity:} $a\leq a$
+    \item \textbf{Antisymmetry:} $a\leq b\land b\leq a\implies a=b$
+    \item \textbf{Transitivity:} $a\leq b\land b\leq c\implies a\leq c$
+\end{itemize}
+\textbf{Strict(antireflexive) Partial Order:}
+Homogeneous relations $\le$ on a set $P$ s.t. $\forall a,b,c\in P$:
+\begin{itemize}
+    \item \textbf{Antieflexivity:} $\neg(a\leq a)$
+    \item \textbf{Asymmetry:} $\neg(a\leq b\lor b\leq a)$
+    \item \textbf{Transitivity:} $a\leq b\land b\leq c\implies a\leq c$
+\end{itemize}
+If $a\leq b\lor b\leq a$ holds, then the ordering is a total order.
+
+\textbf{Order Isomorphism:} For two Partially Ordered Sets $(S\leq _{S})$ and $(T\leq _{T})$, an order isomorphism from $(S\leq _{S})$ to $(T\leq _{T})$ is a bijective function $f:S\to T$ with the property that, for every $x$ and $y$ in $S$, $x\leq _{S}y\iff f(x)\leq _{T}f(y)$
+$$$$
+\textbf{Well-founded relation}\\
+A binary relation $\mathrel{R}$ is called well-founded on a class X if every non-empty subset $S\subseteq{}X$ has a $minimal$ element with respect to $\mathrel{R}$, that is, an element $m$ not related by $s\mathrel{R}m$ for any $s\in{}S$. In other words:
+$$(\forall{}S\subseteq{}X)[S\neq\emptyset\implies (\exists{}m\in S)(\forall{}s\in S)\neg(s\mathrel{R}m)]$$
+A set is well ordered if it has a well-founded relation $\mathrel{R}$.\\
+Well Orders such as $\le$ are non-strict and $<$ is strict.\\
+\textbf{Ordinals}
+
+\textbf{Ordinals} are extensions of enumeration to infinite sets.\\
+A finite set can be enumerated by successively labeling each element with the least natural number that has not been previously used. Similarly, ordinal numbers are defined more as linearly ordered labels that include the natural numbers and have the property that every set of ordinals has a least element thus well ordered. (this is needed for the "least unused element" to be meaningful). This allows us to define an ordinal number $\omega$ s.t. $\forall{}n\in\mathbb{N}:\omega>n$ and $\omega<\omega +1\dots$
+
+\textbf{Rigorous Definition of Ordinal Number}
+For each well-ordered set $T$, there is an injective function $f:T \to \mathcal{P}(T)$ defined by $T(a):=\{x \in T | x < a\}$ that preserves order. Thus, it is an order isomorphism from $T$ to its own image.
+
+This motivates the definition: Each ordinal is the well-ordered set of all smaller ordinals. In other words, $\lambda := [0,\lambda)$
+
+Formally:
+
+A set $S$ is an ordinal if and only if $S$ is strictly well-ordered with respect to set inclusion and every element of S is also a subset of S.
+
+It can be shown by transfinite induction that every well-ordered set is order-isomorphic to exactly one ordinal.
+
+Since elements of every ordinal are subsets of ordinals, they are themselves ordinals. Given two ordinals S and T, S is an element of T if and only if S is a proper subset of T. Moreover, either S is an element of T, or T is an element of S, or they are equal. So every set of ordinals is totally ordered. Further, every set of ordinals is well-ordered.
+
+Consequently, every ordinal S is a set having as elements precisely the ordinals smaller than S. For example, every set of ordinals has a supremum: the ordinal obtained by taking the union of all the ordinals in the set. This union exists regardless of the set's size, by the axiom of union.
+
+The class of all ordinals is not a set. If it were a set, it is thus an ordinal and thus a member of itself, breaking the Axiom of Pairing (as we are going to see).
+
+An ordinal is finite $\iff$ the opposite order is also well-ordered, which is the case $\iff$ each of its non-empty subsets has a maximum.
+$$$$
+
+\subsubsection{Ranks}
+\textbf{Transfinite Induction and Transfinite Recursion}\\
+Transfinite Induction is a proof technique. Transfinite recursion, on the other hand, is a construction technique. You use transfinite recursion to build some mathematical object (usually but not always a function), and you use transfinite induction to prove things about it.
+Let $P$ be a property defined for all ordinals $\alpha$:
+$$[(\forall\beta<\alpha:P(\beta ))\implies P(\alpha)]\implies[\forall\gamma\mbox{ s.t. }\gamma\mbox{ is an ordinal}:P(\gamma)]$$
+\textbf{Standard process:}
+\begin{itemize}
+    \item \textbf{Zero case:} Prove that $P(0)$ is true
+    \item \textbf{Successor case:} Prove that for any successor ordinal $\alpha+1$, $P(\alpha+1)$ follows from $P(\alpha)$ (and, if necessary, $P(\beta )$ for all $\beta <\alpha$)
+    \item \textbf{Limit case:} Prove that for any limit ordinal $\lambda$, $P(\lambda)$ follows from $P(\beta)$ for all $\beta<\lambda$
+\end{itemize}
+
+\textbf{Transfinite Recursion}
+Instead of proving that something holds for all ordinal numbers(Transfinite Induction), it constructs a sequence of objects, one for each ordinal\\
+\textbf{Formally:}
+\begin{enumerate}
+    \item Given a class function $G:V^{<\alpha}\mapsto V$ ($V$ is the class of all sets), there exists a unique transfinite sequence $F:Ord\mapsto V$ (Ord is the class of all ordinals) s.t. 
+    $$\forall\alpha:F(\alpha )=G(F_{<\alpha})\mbox{ here, }F_{<\alpha}\mbox{ denotes the set of maps from the set of all cardinals $\beta<\alpha$ to $V$}$$
+    We're trying to build a function $\alpha\mapsto V$ That is completely reliant on $G$ building it further step by step, thus: if I feed $G$ a map $p:\beta\mapsto V$ for some $\beta<\alpha$, $G$ has to tell me what $F(\beta)$ is given by $p=F_{<\beta}$. That is, if I've defined $F$ for the first $\beta$ inputs, $G$ tells me how to define $F$ for the next input.
+    
+    For example: feeding $\emptyset$ into $G$, we get $F(0)=G(\emptyset)$. Then $F(1)=G(\{\emptyset,G(\emptyset)\})$ And so on.
+    \item Given a set $g_1$, and class functions $G_2,G_3\exists!F:Ord\mapsto V$ s.t.
+    \begin{itemize}
+        \item $F(0) = g_1$
+        \item $F(\alpha+1)=G_2(F(\alpha)),\forall\alpha\in Ord$
+        \item $\mathcal{F}(\lambda )=G_3(\mathcal{F}_{<\lambda})$ for all limit $\lambda\neq0$
+    \end{itemize}
+    More generally, one can define objects by transfinite recursion on any well-founded relation $\mathcal{R}$. ($\mathcal{R}$ need not even be a set; it can be a proper class, provided it is a set-like relation; i.e. for any $x$, the collection of all $y$ such that $y\mathcal{R}x$ is a set.)
+\end{enumerate}
+\textbf{Rank:}\\
+Rank$\{\}:=0$, define the rank of all other well-founded sets inductively as the smallest ordinal number greater than the ranks of all members of the set. \\
+\textbf{A rigorous definition of Rank (The Von Neumann Universe)}
+
+\textbf{Successor Ordinal:}
+$$S(\alpha):=\alpha\cup\{\alpha \}$$
+In other words, the smallest ordinal greater than some other ordinal.
+Since the ordering on the ordinal numbers is given by $\alpha<\beta\iff\alpha\in\beta$, it is easy to verify that there is no ordinal number between $\alpha$ and $S(\alpha)$
+
+\textbf{Limit Ordinal:} An ordinal $\lambda$ s.t. $\forall\beta<\lambda\implies\exists\gamma$ s.t. $\beta<\gamma<\lambda$ Every ordinal number is either zero, or a successor ordinal, or a limit ordinal.
+
+$V_{\alpha}$ is the set of all sets having ranks less than $\alpha$, thus $V_{\alpha}$ may be defined by transfinite recursion as follows:
+
+$$V_0:=\emptyset$$
+$$\mbox{For all ordinal }\beta,V_{\beta+1}:=\mathcal{P}(V_{\beta })$$
+For any limit ordinal $\lambda$, let $V_\lambda$ be the union of all the $V$-stages so far:
+$$V_\lambda:=\bigcup_{\beta<\lambda}V_{\beta }$$
+$\exists!\varphi$ s.t. $\varphi(\alpha,x):=$ the set $x$ is in $V_\alpha$\\
+The sets $V_\alpha$ are called stages or ranks.\\
+The class $V$ is defined to be the union of all the $V$-stages:
+$$V:=\bigcup_\alpha V_\alpha\mbox{, similarly for sets: }V_{\alpha }:=\bigcup _{\beta <\alpha }{\mathcal {P}}(V_{\beta })$$
+The rank of a set $S$ is the smallest $\alpha$ such that $S\subseteq V_\alpha$. Another way to calculate rank is:
+$$\operatorname{rank}(S)=\bigcup\{\operatorname{rank}(z)+1|z\in S\}$$
+\subsubsection{Russell's Paradox}
+{\textbf{The Unrestricted Axiom of Comprehension:}}\\
+An Axiom used in systems of Naive Set Theory that leads to the Russell's Paradox:
+For every unambiguously definable condition $\varphi,\exists{}X_{\varphi}$ s.t. $X_{\varphi}=\{x|\varphi(x)\}$
+Such a statement is false, take $B=\{x|\varphi(x)\}$ where $\varphi(x)\equiv{}x\notin{}B$, clearly, any element can not be in or not in the set, which is a paradox.
+This leads to the construction of the Restricted Axiom of Comprehension, which states:
+
+For every unambiguously definable condition $\varphi,\forall{}A\exists{}B$ s.t. $B=\{x\in{}A|\varphi(x)\}$ or in other words:
+$$\forall\varphi,\forall{}A,\exists{}B\mbox{ s.t. }\forall{}x\in{}A:(x\in{}B\iff{}x\in{}A\land\varphi(x))$$
+The $\Longleftarrow$ is needed as $\emptyset:=\{x|x\neq{}x\}\implies\forall{}x,x\notin\emptyset\implies{}\neg(x\in\emptyset)$. Without the $\Longleftarrow$, the $\emptyset$ becomes the set for all conditions.\\
+{\textbf{The set of all sets:}}
+Under the Restricted Axiom of Comprehension, a set of all sets can not exist:
+$$\forall{}A,\exists{}B\mbox{ s.t }B=\{x|x\notin{x}\}\mbox{ to avoid contradiction, }\implies{}B\notin{}B,B\notin{}A$$
+\subsubsection{Cantor's Theorem of Powersets}
+$$\mbox{card}X<\mbox{card}\mathcal{P}(x)$$
+{\textbf{Proof:}}
+$$\forall{}A:
+\mbox{if }A=\emptyset\implies{}\mbox{card}\mathcal{P}(X)=\mbox{card}\{\emptyset\}=1>\mbox{card}\emptyset=0{}$$
+$$\mbox{if }A\neq\emptyset:\mbox{Assume there exists a surjection }fA:\mathcal{P}(A)\implies\forall{}x\in{}A,
+    \begin{cases}
+        x\in{}f(x)\\
+        x\notin{}f(x)
+    \end{cases}$$
+$$B:=\{x|x\notin{}f(x)\}\mbox{, clearly, }B\in{}\mathcal{P}(A)\implies\exists{}x_B\in{}A\mbox{ s.t. }f(x_B)=B\implies{}\neg{}x_B\in{}f(x_B)\land\neg{}x_B\notin{}f(x_B)$$
+Causing Contradiction $\square$
+Cantor's Theorem also disproves the existence of a set of all sets.\\
+{\textbf{Disproof:}}
+If there exists a set of all sets $A$, then as $P(A)$ is a set of sets, $\forall{}x:x\in{}P(A),x\in{}A\implies\exists{}fP(A):A$ s.t. $f(x)=x$ is an injection, contradicting Cantor's Theorem $\square$
+\subsubsection{The ZFC Axioms}
+\begin{enumerate}
+    \item {\textbf{The Axiom of Extensionality:}}
+    $$\forall{}x\forall{}y[\forall{}z(z\in{}x\iff{}z\in{}y)\implies{}x=y]$$
+    Here, we can define $=$ as $\forall{}z(z\in{}x\iff{}z\in{}y)\land\forall{}w[x\in{}w\iff{}y\in{}w]$, thus, the Axiom becomes:
+    $$\forall{}x\forall{}y[\forall{}z(z\in{}x\iff{}z\in{}y)\implies\forall{}w[x\in{}w\iff{}y\in{}w]$$
+    \item {\textbf{Axiom of Regularity:}}\\
+    Every non-empty set $A$ contains an element that is disjoint from A:
+    $$\forall{}x(x\neq\emptyset\rightarrow\exists{}y(y\in{}x\land{}y\cap{}x=\emptyset))$$
+    \item {\textbf{Axiom Schema of Specification(Separation):}}\\
+    This is also called the Axiom of Restricted Comprehension.\\
+    Let $\varphi$ be any formula with all free varibales among $x,z,w_1,\dots,w_n$ Then:
+    $$\forall{}z\forall{}w_1\dots\forall{}w_n\exists{}y\forall{}x[x\in{}y\iff((x\in{}z)\land\varphi(x,z,w_1,\dots,w_n))]$$
+    It basically states that: Given any set $A$, there exists subset B such that, for any set $x$, it is a member of B if and only if $x$ is a member of A and $\varphi$ holds for x
+    \item{\textbf{Axiom of Paring:}}\\
+    For any set $x,y$, there exists a set that contains and only contains $x$ and $y$ as elements, or formally:
+    $$\forall{A}\forall{B}\exists{C}\forall{D}[D\in{C}\iff(D=A\lor{}D=B)]$$
+    \textbf{Implications:}
+    \begin{itemize}
+        \item $A$ is a set $\implies\{A\}$ is a set, let $A$ and $B$ both be $A$ in the definition to get this result
+        \item \textbf{No set is an element of itself}\\
+        \textbf{Proof:} let $A$ be a set, due to the Axiom of Regularity, $\{A\}\cap{}A=\emptyset$, if $A\in{}A$ as $A\in\{A\}$, $\{A\}\cap{}A=A$ contradicting the Axiom of Regularity
+        \item Allows for the definition of ordered pairs, for any object $a$ and $b$\\
+        $(a,b):=\{\{A\},\{a,b\}\}$, which satisfies: $(a,b)=(c,d)\iff{}a=c\land{}b=d$\\
+        For any object $a_1,\dots,a_n,(a_1,\dots,a_n):=((a_1,\dots,a_{n-1}),a_n)$
+    \end{itemize}
+    \item {\textbf{Axiom of Union:}}\\
+    For any set $A$, there is a set $\bigcup{}A$ which consists of just the elements of the elements of that set $A$
+    $$\forall{A}\exists{B}\forall{c}(c\in{B}\iff\exists{D}(c\in{D}\land{}D\in{A}))$$
+    \textbf{Implications:}
+    \begin{itemize}
+        \item \textbf{Allows union of sets to exist}\\
+        Due to the Axiom of pairing, $\forall{A}\forall{B}\exists\{A,B\}$. Thus, we can define of union of $A$ and $B$ as the $\bigcup\{A,B\}$
+        \item \textbf{Allows intersection of sets to exist}\\
+        Applying the Axiom of Specification, let $E\in{}A$ define $\bigcap{}A=\{c\in{}E|\forall{D}(D\in{}A\implies{}c\in{}D)\}$
+    \end{itemize}
+    \item {\textbf{Axiom Schema of Replacement:}}\\
+    The image of a set under any definable function will also fall inside a set.
+    $$\forall A\forall w_{1}\forall w_{2}\ldots \forall w_{n}{\bigl [}\forall x(x\in A\Rightarrow \exists !y\,\varphi )\Rightarrow \exists B\ \forall x{\bigl (}x\in A\Rightarrow \exists y(y\in B\land \varphi ){\bigr )}{\bigr ]}$$
+    \textbf{Consequences:}
+    \begin{itemize}
+        \item \textbf{No infinite descending sequence of sets exists}\\
+        \textbf{Proof:} Suppose on the contrary, there is a function $f$ on $\mathbb{N}$ such that $f(n+1)\in{}f(n)$. Define $S=\{f(n)|n\in\mathbb{N}\}$ which is a set due to the Axiom Schema of Replacement. According to the Axiom of Regularity, $\exists{}B\in{}S$ s.t. $B\cap{}S=\emptyset$, but due to the definition, $B=f(k)\implies{}B\cap{}S={f(k+1)\cup{}A}$ where $A$ is the remaining common elements. Thus contradicting the Axiom of regularity.\\
+        With this result, we can thus define \textit{\textbf{Transitive Sets}} as sets (denoted here as T) where $t\in{}T\land{}x\in{}t\implies{}x\in{}T$\\
+        A transitive closure of $X$ is the smallest transitive set containing $X$, thus a set containing $X$, all elements of $X$, and all elements of the elements of $X$ and so on.
+        \item \textbf{The Axiom Schema of Separation is equivalent to the Axiom of Empty set with the presence of the Axiom Schema of Replacement}\\
+        \textbf{The Axiom of Emptyset}
+        $$\exists{}x\forall{}y\neg(y\in{}x)$$
+        \textbf{Proof:} The Axiom Schema of Separation can be denoted as:
+        $$\forall{A}\exists{B}\forall{C}(C\in{}B\iff[C\in{}A\land\varphi(C)])$$
+        If no element $E$ in $A$ satisfies $\varphi(E)$ then let set $B=\emptyset$\\ Otherwise, choose a fixed $E\in{}A$ s.t. $\varphi(E)$. $$F:=\begin{cases}
+            \varphi(D)&F(D)=D\\
+            \neg{}\varphi(D)&F(D)=E
+        \end{cases}$$
+        Then the above image is a set by the Axiom Schema of Replacement and is clearly the set $B$ desired
+        \item \textbf{Every Set has an Ordinal Rank}\\
+        \textbf{Proof:} Suppose $x$ is any set. Let $t$ be the transitive closure of $\{x\}$. Let $u$ be the subset of t consisting of unranked sets. If $u$ is empty, then $x$ is ranked and we are done. Otherwise, apply the axiom of regularity to $u$ to get an element $w$ of $u$ which is disjoint from $u$. Since $w$ is in $u$, $w$ is unranked. $w$ is a subset of $t$ by the definition of transitive closure. Since $w$ is disjoint from $u$, every element of $w$ is ranked. Applying the axioms of replacement and union to combine the ranks of the elements of $w$, we get an ordinal rank for $w$: $$\operatorname{rank}(w)=\cup\{\operatorname{rank}(z)+1|z\in w\}$$
+        This contradicts the conclusion that $w$ is unranked. So the assumption that $u$ was non-empty must be false and $x$ must have rank.
+    \end{itemize}
+    \item {\textbf{Axiom of Infinity:}}
+    $$\exists\mathbf{I}(\emptyset\in\mathbf{I}\land\forall{}x\in\mathbf{I}((x\cup\{x\})\in\mathbf{I}))$$
+    \textbf{Consequence:}
+    \begin{itemize}
+        \item \textbf{Definition of natural numbers}
+        $$0=\{\}$$
+        $$1=0\cup\{0\}=\{\}\cup\{\{\}\}=\{\{\}\}$$
+        $$2=1\cup\{1\}=\{\{\}\}\cup\{\{\{\}\}\}=\{\{\},\{\{\}\}\}$$
+        $$\dots$$
+        It is not hard to see that in this system, $n=\{n-1,\dots,0\}$\\
+        Thus, clearly, $\mathbb{N}$ is an Ordinal
+        \item \textbf{Extracting the natural numbers from the infinite set}\\
+        $\forall\mathbf{I}\supseteq{}\mathbb{N}_0$. To show that the natural numbers themselves constitute a set, the axiom schema of specification can be applied to remove unwanted elements. The condition used is:
+        $$[n=\emptyset\lor\exists{}k(n=k\cup \{k\})]\land\forall m\in n[m=\emptyset\lor \exists k\in n(m=k\cup\{k\})]$$
+        This set is unique by the axiom of extensionality.
+    \end{itemize}
+    \item \textbf{Axiom of Powerset:}
+    $$\forall{}x\exists{}y\forall{}z[z\in{}y\iff\forall{}w(w\in{}z\implies{}w\in{}x)]$$
+    \textbf{Implication:}\\
+    The power set axiom allows a more concise definition of the Cartesian product of two sets $X$ and $Y$:$$X\times{}Y=\{(x,y)|x\in{}X\land{}y\in{}Y\}$$
+    Hence
+    $$x,y\in X\cup Y$$
+    $$\{x\},\{x,y\}\in{\mathcal{P}}(X\cup Y)$$
+    $$(x,y)=\{\{x\},\{x,y\}\}\in{\mathcal  {P}}({\mathcal  {P}}(X\cup Y))$$
+    Thus the Cartesian product is a set since
+    $$X\times{}Y\subseteq{\mathcal{P}}({\mathcal  {P}}(X\cup{}Y))$$
+    The above results can be extended to:
+    $$X_{1}\times\cdots\times{}X_{n}=(X_{1}\times\cdots\times{}X_{{n-1}})\times{}X_{n}$$
+\end{enumerate}
+\subsubsection{The Axiom of Choice}
+\begin{enumerate}
+    \item \textbf{The Axiom of Choice:}\\
+    For any set $X$ of nonempty sets, there exists a choice function $f$ that is defined on $X$ and maps each element of $X$ to an element of the element. Formally:
+    $$\forall X(X\neq\emptyset)\left[\emptyset\notin X\implies\exists f:X\to\bigcup X\mbox{ s.t. }\forall A\in X:(f(A)\in A)\right]$$
+    \item \textbf{The Well Ordering Theorem:}\\
+    \textbf{Statement:} Every set has a Well Order
+    
+    \textbf{Axiom of Choice $\implies$ The Well Ordering Theorem}\\
+    \textbf{Proof:} Let the set we are trying to well-order be $A$, and let $f$ be the choice function on $\mathcal{P}(A)\setminus\emptyset$. For every ordinal $\alpha$, define a set $a_\alpha$ that's in $A$ by setting $a_\alpha =f(A\setminus\{a_{\xi}|\xi<\alpha\})$ if this complement $A\setminus\{a_{\xi }|\xi <\alpha\}$ is nonempty, or leave $a_\alpha$ undefined if it is empty. That is, $a_\alpha$ is chosen from the set of elements of A that have not yet been assigned a place in the ordering (or undefined if the entirety of A has been successfully enumerated). Then $\langle a_{\alpha }|a_{\alpha }{\text{ is defined}}\rangle$ is a well-order of A as desired.
+    
+    \textbf{The Well Ordering Theorem $\implies$ The Axiom of Choice}\\
+    \textbf{Proof:} For any set of sets $X$, there exists a Well Ordering $\mathcal{R}_X$, in each element $x_\omega$ of $X$, there is also a well order $\mathcal{R}_{x_\omega}$. Let $\bigsqcup X$ be the disjointed union of elements of $X$ maintaining the $\mathcal{R}_X$ and all $\mathcal{R}_{x_\omega}$. The above set of well orders themselves form a well order on $\mathcal{R}_{\bigsqcup X}$ on $\bigsqcup X$. Pick each of the minimums of $x_\omega$ from $\bigsqcup X$ and form set $S$(this set exists according to the Axiom of restricted comprehension), they are trivially well ordered by $\mathcal{R}_{\bigsqcup X}$. Thus, an order isomorphism can be formed between $S$ and $X$, being a choice function.
+    \item \textbf{Zorn's Lemma:}
+    \textbf{Statement:} Suppose $P$ is partially ordered by $\mathcal{R}$, and every subset $p$ of $P$ ordered by $\mathcal{R}$ in $P$ ($p$ is a chain in $P$) has an upper bound in $P$. Then the set $P$ contains at least one maximal element.
+    
+    \textbf{Consequence: Every Vector Space has a Basis}\\
+    \textbf{Proof:}
+    \begin{itemize}
+        \item If $V=\{0\}$, then the empty set is a basis for $V$
+        \item Suppose that $V\neq\{0\}$. Let $P$ be the set consisting of all linearly independent subsets of $V$.(Which must be possible as $V$ is non-empty). Furthermore, $P$ is partially ordered by set inclusion. Thus, finding a maximal linearly independent subset of $V$ is the same as finding a maximal element in $P$.
+        Take any chain $T$ in $P$ totally ordered by set inclusion.
+        \begin{itemize}
+            \item If $T=\emptyset$, then $\forall v\in V$, $\{v\}\in P$ thus is an upper bound for $T$ in $P$.
+            \item Suppose then that $T\neq\emptyset$\\
+            Take $B=\bigcup t(t\in T)$, if we can show that $B$ is linearly independent, then it trivially is an upper bound of $T$ in $P$.\\
+            Suppose $B$ is not linearly independent. Then there exists vectors $v_1,v_2,\dots,v_k\in B$ which from sets $S_1,S_2,\dots,S_k\in T$ which are totally ordered. Scalars $a_1,a_2,\dots,a_k$ not all zero, such that: $a_1v_1+a_2v_2+\dots+a_kv_k=0$\\
+            Thus, $v_1,v_2,\dots,v_k\in B\in S_k$, contradicting the assumption that all members of $T$ are linearly independent.\\
+            Therefore, according to Zorn's Lemma, as $B$ is a upper bound of $T$ in $P$, and $T$ is arbitrary, $P$ must contain at least one maximum, which is trivially a basis of $V$.
+        \end{itemize}
+    \end{itemize}
+    \textbf{Axiom of Choice$\implies$Zorn's Lemma}
+    \textbf{Proof:} Assume the axiom of choice. Let $(P,\leq)$ a partially ordered set that every chain has an upper bound. Let f to be a choice function from all non-empty subsets of $P$, and let $P_a=\{x\in P|a<x\}$ then $P_a=\emptyset\iff a$ is a maximal element.
+    We define by using transfinite induction:
+    \begin{itemize}
+        \item Let $a_0$ be an element of P, if it is maximal then we have finished. Otherwise $P_0=\{x\in P|a<x\}$ is non-empty, let $a_1=f(P_0)$.
+        \item Suppose $a_\alpha$ was defined, if it is maximal then we are done, otherwise $P_\alpha=\{x\in P|a_\alpha<x\}$ is non-empty and $a_{\alpha+1}=f(P_\alpha)$.
+        \item If $\alpha$ is a limit ordinal, and for all $\beta<\alpha$ we have chosen $a_\beta$, then $\{a_\beta|\beta<\alpha\}$ is a chain in $P$ without a maximal element, and therefore bounded with an upper bound above all the elements of the chain, thus $\bigcap_{\beta<\alpha}P_\beta\neq\emptyset$, and let $a\alpha=f\left(\bigcap_{\beta<\alpha}P_\beta\right)$.
+    \end{itemize}
+    We argue that this must stop at some point, otherwise we have an injection from the proper class of the ordinals into the set $P$. Why did the process stop? It can only stop if we have reached a maximal element at some $a_\gamma$, as wanted.
+    
+    \textbf{Zorn's Lemma$\implies$Axiom of Choice:}\\
+    \textbf{Proof:} Assume Zorn's lemma, and let $X$ be a non-empty collection of non-empty sets. Let $(C,\subseteq)$ be the set of all choice functions from some elements of $X$.\\
+    This is a non-empty set, since we can always choose from finitely many sets. Given a chain of choice functions, the union is indeed a function. So the condition of Zorn's lemma is satisfied. We have a maximal element $f$.\\
+    If $f$ is not a choice function from all the members of $X$ then we can extend it to one more element, which contradicts the maximality.
+    \null\hfill{(credit to: Asaf Karagila on stackexchange.com)}
+    
+    \item \textbf{Principle of Cardinal Comparability}\\
+    \null\hfill{(Content on Cardinality missing for this proof)}
+\end{enumerate}
+\subsubsection{A bit more on Ordinals:}
+\textbf{Disjointed Union:}\\
+This most easily explained with an example:
+$$A_1=\{a,b,c\},A_2=\{a,b\},A_3=\{a\}\implies\bigsqcup_{i=1,2,3}A_i=\{(a,1),(a,2),(a,3),(b,1),(b,2),(c,1)\}$$
+\textbf{Large Ordinals:}\\
+Proving the existence of any limit ordinal greater than $\omega$ requires the replacement axiom. The ordinal number $\omega\cdot2=\omega+\omega$ is the first such ordinal. The axiom of infinity asserts the existence of an infinite set $\omega=\{0,1,2,\dots\}$ One may hope to define $\omega\cdot2$ as the union of the sequence $\{\omega,\omega+1,\omega+2,\dots\}$. However, arbitrary such classes of ordinals need not be sets - for example, the class of all ordinals is not a set. The Axiom of Replacement now allows one to replace each finite number $n$ in $\omega$ with the corresponding $\omega+n$, and thus guarantees that this class is a set. As a clarification, note that one can easily construct a well-ordered set that is isomorphic to $\omega\cdot2$ without resorting to replacement – simply take the disjoint union of two copies of $\omega$ but this is not an ordinal since it is not totally ordered by inclusion.\\
+Larger ordinals rely on replacement less directly. For example, $\omega_1$, the first uncountable ordinal, can be constructed as follows: the set of well orders on the set of countable ordinals-$\mathbb{N}$(a set of ordered pairs) exists as a subset of $\mathcal{P}(\mathbb{N}\times\mathbb{N})$ by separation and powerset.\\
+Each countable well order is a set of ordered pairs on $\mathbb{N}$, meaning that they are each a subset of $\mathbb{N}\times\mathbb{N}$, thus the set of all countable well orders is a subset of $\mathcal{P}(\mathbb{N}\times\mathbb{N})$\\
+Replace each ordered pair with its ordinal. This is the set of countable ordinals $\omega_1$, which can itself be shown to be uncountable.\\
+\null\hfill{\textit{\textbf{Proof missing for $\omega_1$ being uncountable and it being the smallest one}}}
+\section{The Real Numbers}
+\subsection{Axioms for the Real Numbers}
+\subsection{Field}
+The real numbers form a field - that is, there are two operations ($+$ and $\times$) for which:
+\begin{itemize}
+    \item A1-A5: $\mathbb{R}$ is an abelian group under $+$
+    \item M1-M5: $\mathbb{R}/\{0\}$ is an abelian group under $\times$
+    \item Distributivity: $a(b+c) = ab+ac$ for all $a,b,c \in \mathbb{R}.$
+\end{itemize}
+The term "abelian group" means that it satisfies the group axioms and is commutative. 
+
+For example, A1-A5 means that adding two real numbers gives another real number (closure), there are two-sided inverses and identity, that $a+(b+c) = (a+b)+c$ (associativity), and $a+b=b+a$ (commutativity).
+
+Often texts will explicitly say that $1 \neq 0$; that is, that the additive and multiplicative identities are different. Note that our construction makes this redundant since we are considering $\mathbb{R}/\{0\}$ as the multiplicative group. 
+
+Texts may also define distributivity slightly differently, like for example $(a+b)c = ac+bc.$ But from the previous axioms it can be shown all such definitions are equivalent.
+\subsection{Ordering}
+There is a total order on the reals ($\leq$).
+That is, there is a logical operation $a \leq b.$ This can be thought of as a function that takes as input two real numbers $a,b$ and outputs "true" (if a is less than or equal to b) or "false" (otherwise).
+The operation being a "total order" means it satisfies the following properties (here, $a,b,c$ are understood as arbitrary members of $\mathbb{R}$):
+\begin{itemize}
+    \item Reflexivity: $ a \leq a.$
+    \item Transitivity: $(a \leq b) \land (b \leq c) \implies a \leq c.$
+    \item Trichotomy: Exactly two of the following three statements hold: $a \leq b, b \leq a, a \neq b$
+\end{itemize}
+
+Trichotomy is also often defined by defining the relation $a<b:= a \leq b \land a \neq b$
+and saying that exactly one of the following hold:
+$a<b, a=b, a>b.$
+This definition is more intuitive, but it does require us to define the strict total order $<$.
+
+Some texts often also break trichotomy into two statements, by saying that $(a \leq b) \land (b \leq a) \implies a=b$ and further that $(a \leq b) \lor (b \leq a)$ always holds.
+
+However, the term "ordered field" does not simply mean "field with an order". The order has to play nicely with the field operations, and these are additional axioms. 
+
+There are two ways of going about this: one is by defining a "positive cone" (set of positive numbers) P closed under addition and multiplication, and the other is by directly detailing properties of $leq.$
+
+The positive cone definition is as follows:
+There exists a set $P$ such that $a < b \iff b-a \in P$ and is closed under both $+$ and $\times.$
+
+It turns out that the abelian group $(P, \times)$ is isomorphic to $(\mathbb{R}, +)$ with the natural (or any other) logarithm providing said isomorphism. 
+This fact is usually listed as a "property of logarithms" in most middle school math textbooks ($\text{log}(ab) = \text{log})(a) + \text{log}(b)$).
+
+The direct way of describing the relationship between order and operations is by detailing the properties:
+
+$a < b \iff a + c < b + c$ and $0 < a \text{and} 0 < b \implies 0 < ab.$
+
+It is very easy to show both descriptions are equivalent (when taken together with the field axioms). 
+\subsection{Completeness}
+
+This is the trickiest bit. A good example of an ordered field is $\mathbb{Q},$ and in fact before people knew about irrational numbers $\mathbb{Q}$ was the usual choice of number system that for modelling real-world quantities that weren't quantized (say, lengths)
+
+The concept of completeness is really what divides the discrete from the continuous, and gives rise to ideas like continuity and limits. 
+
+The way Zorich's book defines it is using the notion of a \textit{Dedekind cut.}
+
+A Dedekind cut on $\mathbb{R}$ is a partition $(X, Y)$ such that neither set is empty and $\forall x \in X, y \in Y$ we have $x \leq y.$
+This can be thought of as "cutting" the real number line into two "pieces" $X$ and $Y.$
+
+The axiom of completeness states that every Dedekind cut $(X, Y)$ has a number $c \in \mathbb{R}$ "in between" X and Y. That is, $\forall x \in X, y \in Y$ we have $x \leq c \leq y.$
+
+Using trichotomy, it is easy to show that such a $c$ (if it exists) is unique.
+
+If there is $c$ and $c'$ (WLOG, $c < c'$) we consider $d := \frac{c + c'}{2}.$
+Using the order and field axioms, $\frac{1}{2} > 0$ and thus $c < d < c'.$
+Thus, $d$ cannot be in X, because otherwise $d \leq c$ would hold (violating trichotomy) and it cannot be in Y, because otherwise $c' \leq d$ would hold (also violating trichotomy) which is a contradiction as $(x, Y)$ is a partition of $\mathbb{R}.$
+
+Initially, Dedekind cuts were a way to construct the real numbers (with every real number being a Dedekind cut partitioning $\mathbb{Q}$), but they are an elegant way of establishing completeness. 
+
+The Oxford lecture notes define completeness as "every nonempty sequence bounded above has a supremum".
+
+"Bounded above" means there is an upper bound $M$ such that $M > a_n$ for every element $a_n$ of the sequence.
+"Supremum" means an upper bound $M'$ such that all other upper bounds $M$ satisfy $M' \leq M.$
+
+It is very simple to show suprema are unique; assume for the sake of contradiction there were two suprema $S$ and $S'.$ Since they are both upper bounds, $S \leq S'$ and $S' \leq S$ so $S = S'.$
+
+This definition is identical to the Dedekind cut definition.
+
+If we know all Dedekind cuts have such a $c$ "in between X and Y", we can associate every sequence $a_n$ with the Dedekind cut $(X, Y)$ where $Y$ is the set of upper bounds of $a_n$ and $X$ is the complement of $Y$ in $\mathbb{R}.$
+
+The existence of a supremum is identical to the existence of such a $c,$ and since $c$ exists we have a supremum.
+
+To go the other way (to show every Dedekind cut has a $c$ using Oxford's definition of completeness) we need to associate to every Dedekind cut a sequence whose supremum is in both $X$ and $Y.$
+
+We take $x \in \mathbb{X}$ and $y \in \mathbb{Y}.$
+
+Consider the function $f(x,y,n) := x + \dfrac{y-x}{2^n}$ for $x,y \in \mathbb{R}$ and $n \in \mathbb{N}.$
+
+We know $f(x,y,1) = y$ and we can have an $f(x,y,n)$ arbitrarily close to $x.$
+
+Thus, either $x$ is the maximum value of $X$ (in which case $x=c$ will do),
+or there exists an $f(x,y,n) \in X$ such that $f(x,y,n-1) \notin X \implies f(x,y,n-1) \in Y$. Thus, $f(x,y,n)$ is within $\dfrac{y-x}{n} - \dfrac{y-x}{n-1}$ of an element in $Y.$ This is $\dfrac{y-x}{n(n-1)} \leq \frac{y-x}{2}.$ Let us call this $g(x,y)$ and the element in $Y$ being considered ($f(x,y,n-1)$) as $h(x,y).$
+
+We see that $g(x,y)$ is always within $\frac{y-x}{2}$ of a point in $Y.$
+
+Thus, if we have a point $x \in X$ that is within $\epsilon$ of a point in $Y$ we can construct another point $x' \in X$ that is within $\dfrac{\epsilon}{2}$ of a point in Y. 
+
+Consider the sequence $a_n$ defined recursively by $a_0 = x, a_1 = g(x,y), a_i = g(a_{i-1}, h(a_{n-2},y)).$
+No upper bound can exist in X unless it is a maximum of X (in which case we are done), so it must be in Y. However, all the elements are in X, so no element can exceed any element of Y. Thus, the supremum $c$ must satisfy $x \leq c \leq y$ for $x,y \in X, Y$ as desired.
+\section{Limit of Series}
+\section{Limit of Functions and Continuity}
+\textbf{Cantor's Theorem:} On closed intervals uniform continuity$\iff$continuity\\
+\textbf{Proof:}
+Not uniform continuous$\implies\exists\varepsilon_0>0\st\forall n\in\N^+\exists x_n',x_n''\st|x_n'-x_n''|<\dfrac{1}{n}\land|f(x_n')-f(x_n'')|\geq\varepsilon_0$
+$$\{x_n'\},\{x_n''\}\mbox{ are bounded}\implies\exists\{x_{n_k}'\}\subset\{x_n'\}\st\lim_{n\to\infty}x_{n_k}'=\xi\implies\lim_{n\to\infty}x_{n_k}''=\lim_{n\to\infty}x_{n_k}''-x_{n_k}'+\lim_{n\to\infty}x_{n_k}'=\xi$$
+$$\implies\lim_{n\to\infty}f(x_{n_k}')-f(x_{n_k}'')=f\left(\lim_{n\to\infty}x_{n_k}'\right)-f\left(\lim_{n\to\infty}x_{n_k}''\right)=f(\xi)-f(\xi)=0$$
+\section{Differentials}
+\subsection{Differentials and Derivatives}
+\subsection{Properties and Meaning of Derivative}
+\subsection{Arithmetics and Laws of Derivatives}
+\subsection{Derivatives of Composite Functions}
+\subsection{High Order Derivatives}
+\section{The Intermediate Value theorem}
+\section{Indefinite Integrals}
+\subsection{Indefinite Integrals and Their Arithmetics}
+\textbf{Definition: Anti-Derivative}\\
+Let $dx\in\R,f(x)=F'(x)=\dfrac{dF}{dx}$, then
+$$d:F(X)\mapsto f(x)dx$$
+$$\int:f(x)dx\mapsto F(x)+C$$
+\textbf{Corollary:} Linearity of the indefinite integral\\
+Suppose $f(x),g(x)$ are the anti-derivatives of $F(x),G(x)$, then
+$$\int[k_1f(x)+k_2g(x)]dx=k_1\int f(x)dx+k_2\int g(x)dx$$
+\textbf{Proof1:} As $\int$ is the inverse function of linear function $d$, $\int$ must be linear.\\
+\textbf{Proof2:} It is easy to verify that $k_1G(x)+k_2G(x)+C$ is the anti-derivative of both sides of the equation.
+\subsection{Integration by Substitution and Integration by Parts}
+\subsubsection{Substitution}
+\textbf{Type 1:}\\
+Let $\tilde{F}(g(x))=F(x)$
+$$\int f(x)dx=\int\frac{dF(x)}{dx}dx=\int\frac{d\tilde{F}(g(x))}{dg(x)}\cdot\frac{dg(x)}{dx}dx=\int\frac{d\tilde{F}(g(x))}{dg(x)}\cdot dg(x)$$
+This method breaks $f(x)$ down into the form of the derivative of a composite function. (second equation)\\
+This method can also be seen as simply replacing the variable. (third equation)\\
+\textbf{Type 2}\\
+Let $x=\varphi(t)$
+$$\int f(x)dx=\int f(\varphi(t))d\varphi(t)=\int f(x)dx=\int f(\varphi(t))\varphi'(t)dt$$
+This is another way of replacing the variable, however, clearly, $\varphi$ has to be invertible.
+\subsubsection{By Parts}
+Suppose $u,v$ are functions of $x$, then
+$$duv=udv+vdu\implies uv=\int duv=\int udv+\int vdu\implies\int u\frac{dv}{dx}dx=uv-\int v\frac{du}{dx}dx$$
+Replace $\dfrac{dv}{dx}$ with $w$:
+$$\int uwdx=u\int wdx-\int\int wdx\cdot u'dx$$
+\textbf{Useful Result:} $I_n=\displaystyle\int\dfrac{dx}{(x^2+a^2)^n}$
+\begin{equation}
+\begin{split}
+    (\mbox{\textbf{Initial case}})\,&I_1=\int\frac{dx}{x^2+a^2}=\frac{1}{a}\arctan\frac{x}{a}+C\\
+    (\mbox{\textbf{Recursion}})\,&I_n=\int\dfrac{dx}{(x^2+a^2)^n}=\frac{1}{a^2}\int\frac{x^2+a^2-x^2}{(x^2+a^2)^n}dx=\frac{I_{n-1}}{a^2}+\frac{1}{a^2}\int x\cdot\frac{-x}{(x^2+a^2)}dx\\
+    &=\frac{I_{n-1}}{a^2}+\frac{1}{a^2}\left[x\cdot\frac{1}{2(n-1)}\cdot\frac{1}{(x^2+a^2)^{n-1}}-\int\frac{1}{2(n-1)}\cdot\frac{1}{(x^2+a^2)^{n-1}}dx\right]\\
+    &=\frac{I_{n-1}}{a^2}+\frac{1}{a^2}\left[x\cdot\frac{1}{2(n-1)}\cdot\frac{1}{(x^2+a^2)^{n-1}}-\frac{I_{n-1}}{2(n-1)}\right]\\
+    &=\frac{2n-3}{2a^2(n-1)}I_{n-1}+\frac{1}{2a^2(n-1)}\cdot\frac{x}{(x^2+a^2)^{n-1}}
+\end{split}
+\end{equation}
+\subsection{Indefinite Integral of Rational Functions}
+\subsubsection{Indefinite Integral of Rational Functions}
+\textbf{Definition: Rational Function}
+$$R\left(f_{1}\left(x\right),\dots,f_{k}\left(x\right)\right)=\left\{\dfrac{\sum\limits_{i=1}^{m}a_{i}\left(\prod\limits_{p=1}^{k}f_p^{\varphi_{ip}}\left(x\right)\right)}{\sum\limits_{j=1}^{n}b_{j}\left(\prod\limits_{q=1}^{k}f_q^{\phi_{jq}}\left(x\right)\right)}\right\}$$
+\textbf{Decomposition of real roots}
+$$R(x)=\frac{p(x)}{q(x)}=w+\frac{p_m(x)}{q_n(x)}\,(m\leq n)\mbox{, let }\frac{p_{m}(x)}{q_{n}(x)}=\frac{p_m(x)}{(x-\alpha)^{k}q^*(x)}\mbox{ with the largest }k$$
+$$\lambda:=\frac{p_m(\alpha)}{q^*(\alpha)}\implies p_m(x)-\lambda q^*(x)=(x-\alpha)p^*(x)\implies\frac{p(x)}{q(x)}=\frac{\lambda}{(x-\alpha)^k}+\frac{p^*(x)}{(x-\alpha)^{k-1}q^*(x)}$$
+\textbf{Decomposition of complex roots}
+$$R(x)=\frac{p(x)}{q(x)}=\frac{p(x)}{(x^{2}+2\xi x+\eta^{2})^{l}q^{*}(x)}\mbox{ with the largest }l$$
+$$\implies\mbox{ let }\alpha\pm i\beta\mbox{ be the roots of }x^{2}+2\xi x+\eta^2,\mbox{ let }\frac{p(\alpha+i\beta)}{q^*(\alpha+i\beta)}=\mu(\alpha+i\beta)+\nu\,(\mu,\nu\in\R)\implies$$
+$$\mu(\alpha-i\beta)+\nu=\overline{\mu(\alpha+i\beta)+\nu}=\overline{\left(\frac{p(\alpha+i\beta)}{q^*(\alpha+i\beta)}\right)}=\frac{\left(\overline{p(\alpha+i\beta)}\right)}{\left(\overline{q^*(\alpha+i\beta)}\right)}=\frac{p(\alpha-i\beta)}{q^*(\alpha-i\beta)}$$
+$$\implies p(x)-(\mu x+\nu)q^*(x)=\left(x^{2}+2\xi x+\eta^{2}\right)p^{*}\left(x\right)\implies\frac{p\left(x\right)}{q\left(x\right)}=\frac{\mu x+\nu}{\left(x^{2}+2\xi x+\eta^{2}\right)^{l}}+\frac{p^{*}\left(x\right)}{\left(x^{2}+2\xi x+\eta^{2}\right)^{l-1}q^{*}\left(x\right)}$$
+Re-applying the above two decompositions, we can break any $R(x)$ into the form below:
+$$\frac{p(x)}{q(x)}=r(x)+\frac{p^*(x)}{q(x)}=r(x)+\sum_{k=1}^i\sum_{r=1}^{m_k}\frac{\lambda_{kr}}{(x-\alpha_k)^r}+\sum_{k=1}^j\sum_{r=1}^{n_k}\frac{\mu_{kr}x+\nu_{kr}}{(x^2+2\xi_kx+\eta_k^2)^r}$$
+\subsubsection{Integral of Rational Functions}
+$$\int\frac{p(x)}{q(x)}dx=\int r(x)dx+\sum_{k=1}^i\sum_{r=1}^{m_k}\int\frac{\lambda_{kr}}{(x-\alpha_k)^r}dx+\sum_{k=1}^j\sum_{r=1}^{n_k}\int\frac{\mu_{kr}x+\nu_{kr}}{(x^2+2\xi_kx+\eta_k^2)^r}dx$$
+Resulting in three different types of integrals:
+\begin{equation}
+\begin{split}
+    (a)\,&\int r(x)dx\mbox{ is trivial}\\
+    (b)\,&\int\frac{dx}{(x-\alpha)^n}=\begin{cases}
+        \ln|x-\alpha|+C&n=1\\
+        -\dfrac{1}{n-1}\cdot\dfrac{1}{(x-\alpha)^{n-1}}+C&n\geq2
+    \end{cases}\\
+    (c)\,&\int\frac{\mu x+\nu}{\left(x^2+2\xi x+\eta^2\right)^n}dx=\frac{\mu}{2}\int\frac{2x+2\xi}{\left(x^2+2\xi x+\eta^2\right)^n}dx+(\nu-\mu\xi)\int\frac{dx}{\left(x^2+2\xi x+\eta^2\right)^n}\\
+    &\mbox{\textbf{First term: }}\int\frac{2x+2\xi}{\left(x^2+2\xi x+\eta^2\right)^n}dx=\int\frac{d(x^2+2\xi x+\eta^2)}{\left(x^2+2\xi x+\eta^2\right)^n}dx=\begin{cases}
+        \ln|x^2+2\xi x+\eta^2|+C&n=1\\
+        -\dfrac{1}{n-1}\cdot\dfrac{1}{(x^2+2\xi x+\eta^2)^{n-1}}+C&n\geq2
+    \end{cases}\\
+    &\mbox{\textbf{Second term: }}I_n=\int\frac{dx}{\left(x^2+2\xi x+\eta^2\right)^n}=\int\frac{d(x+\xi)}{\left[(x+\xi)^2+(\eta^2-\xi^2)\right]^n}\\
+    &\begin{cases}
+        I_1=\dfrac{1}{\sqrt{\eta^2-\xi^2}}\arctan\dfrac{x+\xi}{\sqrt{\eta^2-\xi^2}}+C\\
+        I_n=\dfrac{2n-3}{2(\eta^2-\xi^2)(n-1)}I_{n-1}+\dfrac{1}{2(\eta^2-\xi^2)(n-1)}\cdot\dfrac{x+\xi}{(x^2+2\xi x+\eta^2)^n}&n\geq2
+    \end{cases}
+\end{split}
+\end{equation}
+\subsubsection{Other Rational Functions}
+\textbf{Roots:}
+$$\int R\left(x,{\sqrt[n]{\frac{\xi x+\eta}{\mu x+\nu}}}\right)dx=\int R\left(\frac{-\nu t^{n}+\eta}{\mu t^{n}-\xi},t\right)\frac{nt^{n-1}\left(\nu \xi-\mu \eta\right)}{\left(\mu t^{n}-\xi\right)^{2}}dt$$
+$$i+j=kn\implies{\sqrt[n]{\left(\xi x+\eta\right)^{i}\left(\mu x+\nu\right)^{j}}}=\left(\xi x+\eta\right)^{k}{\sqrt[n]{\frac{\left(\mu x+\nu\right)^{j}}{\left(\xi x+\eta\right)^{j}}}}$$
+\textbf{Half-Angle Substitution:}
+\begin{equation}
+\begin{split}
+    \int R\left(\sin x,\cos x\right)dx&=\int R\left(2\sin\frac{x}{2}\cos\frac{x}{2},2\cos^{2}\frac{x}{2}-1\right)dx=\int R\left(\frac{2\tan\dfrac{x}{2}}{\sec^{2}\dfrac{x}{2}},\frac{2}{\sec^{2}\dfrac{x}{2}}-1\right)dx\\
+    &=\int R\left(\frac{2\tan\dfrac{x}{2}}{1+\tan^{2}\dfrac{x}{2}},\dfrac{1-\tan^{2}\dfrac{x}{2}}{1+\tan^{2}\dfrac{x}{2}}\right)\frac{2d\left(\tan\dfrac{x}{2}\right)}{1+\tan^{2}\dfrac{x}{2}}=\int R\left(\frac{2t}{1+t^{2}},\frac{1-t^{2}}{1+t^{2}}\right)\frac{2}{1+t^{2}}dt
+\end{split}
+\end{equation}
+\section{Definite Integrals}
+\subsection{Concepts and Definitions}
+\subsubsection{Riemann Integral}
+\textbf{Definition:} $f(x)$ is \textit{\textbf{Riemann Integrable}} on $[a,b]$
+$$\exists I\in\R\st\begin{cases}
+    \forall P[a,b]=\{x_i\}_{i=0}^n\subset[a,b]\st a=x_0<\dots<x_n=b,\Delta x_{i}:=x_{i}-x_{i-1},\lambda:=\max\limits_{1\le i\le n}(\Delta x_{i})\\
+    \forall\{\xi_{i}\}_{i=1}^n\st\xi_i\in\left[x_{i-1},x_{i}\right]
+\end{cases}$$
+$$\mbox{There is: }\lim_{\lambda\to 0}\sum_{i=1}^{n}f\left(\xi_{i}\right)\Delta x_{i}=I$$
+\subsubsection{Darboux Sum}
+$$\text{\textbf{Darboux Sum: }}\begin{cases}
+    \overline{S}(P)=\sum\limits_{i=1}^n\sup\{f(x)\mid x\in[x_{i-1},x_i]\}\Delta x_{i}&\mbox{Upper Sum}\\
+    \underline{S}\left(P\right)=\sum\limits_{i=1}^n\inf\{f(x)\mid x\in[x_{i-1},x_i]\}\Delta x_{i}&\mbox{Lower Sum}
+\end{cases}$$
+Clearly: $\underline{S}(P)\le\sum\limits_{i=1}^{n}f\left(\xi_{i}\right)\Delta x_{i}\le\overline{S}(P)$\\
+\textbf{Corollary: }Putting new points into the partition does not increase the big sum or decrease the small sum\\
+\null\hfill{Prove as an exercise}\\
+\textbf{Corollary:}
+$$\forall P_1,P_2:\inf\{f(x)\mid x\in[a,b]\}(b-a)\le\underline{S}(P_1)\le\overline{S}(P_2)\le\sup\{f(x)\mid x\in[a,b]\}(b-a)$$
+\textbf{Proof:}
+$$P_1+P_2:=\mbox{The partition containing all points in }P_1\mbox{ and }P_2\implies\underline{S}(P_1)\le\underline{S}(P_1+P_2)\le\overline{S}(P_1+P_2)\le\overline{S}(P_2)$$
+\textbf{Darboux Theorem:}
+$$\forall f(x)\mbox{ bounded on }[a,b]:\lim_{\lambda\to0}\overline{S}(P)=L,\lim_{\lambda\to0}\underline{S}(P)=l$$
+\textbf{Proof:}
+Suppose $\sup\{f(x)\mid x\in[a,b]\}=M,\inf\{f(x)\mid x\in[a,b]\}=m$
+$$\overline{\mathbb{S}}:=\left\{\overline{S}(P)\mid P\mbox{ is a partition of }[a,b]\right\},L:=\inf\overline{\mathbb{S}}\implies\forall\varepsilon,\exists\overline{S}(P')\in\overline{\mathbb{S}}\st0\le\overline{S}(P')-L<\frac{\varepsilon}{2}$$
+$$P':a=x_0'<\dots<x_p'=b,S:=\min\left\{\Delta x_1',\dots,\Delta x_p',\frac{\varepsilon}{2(p-1)(M-m)}\right\}$$
+$$\forall P:a=x_0<\dots<x_n=b\st\max_{1\le i\le n}(x_n)<\delta,p^*:=p+p'\implies\forall[x_{i-1},x_i]:\overline{S}(P[x_{i-1},x_i])-\overline{S}(P^*[x_{i-1},x_i])=$$
+$$\begin{cases}
+    0&\nexists x_j'\in[x_{i-1},x_i]\\
+    M_i(x_i-x_{i-1})-\left[M_i'(x_j'-x_{i-1})+M_i''(x_i-x_j')\right]\le(M-m)(x_i-x_{i-1})<(M-m)\delta&\exists!x_j'\in[x_{i-1},x_i]
+\end{cases}$$
+Clearly, there are utmost $p-1$ intervals satisfying the second case
+$$\implies0\le\overline{S}(P)-\overline{S}(P^*)<(p-1)(M-m)\delta\le\frac{\varepsilon}{2}\implies$$
+$$0\le\overline{S}(P)-L=\left[\overline{S}(P)-\overline{S}(P^*)\right]+\left[\overline{S}(P^*)-\overline{S}(P')\right]+\left[\overline{S}(P')-L\right]<\frac{\varepsilon}{2}+0+\frac{\varepsilon}{2}=\varepsilon\quad\square$$
+\textbf{Corollary:} $\forall\varepsilon>0,\exists P'\st\sum\omega'\Delta x'<\varepsilon\implies\exists\delta\st\forall P(\st\lambda<\delta):\sum\omega\Delta x<\varepsilon$\\
+\textbf{Proof:}
+$$\forall\varepsilon>0,\exists P'\st\varepsilon>\sum\omega'\Delta x'=\left[\overline{S}(P')-I\right]+\left[I-\underline{S}(P')\right]\implies\begin{cases}
+    \exists\overline{\delta}>0\st\forall P\st\lambda<\overline{\delta}:\overline{S}(P)-I<\dfrac{\varepsilon}{2}\\[6pt]
+    \exists\underline{\delta}>0\st\forall P\st\lambda<\underline{\delta}:I-\underline{S}(P)<\dfrac{\varepsilon}{2}
+\end{cases}$$
+$$\delta:=\min\left\{\overline{\delta},\underline{\delta}\right\}\implies\forall P\st\lambda<\delta:\sum\omega\Delta x=\left[\overline{S}(P)-I\right]+\left[I-\underline{S}(P)\right]<\frac{\varepsilon}{2}+\frac{\varepsilon}{2}=\varepsilon$$
+\subsubsection{Equivalent Conditions to Riemann Integrability}
+\textbf{Theorem:} Riemann Integrable$\iff l=I=L$\\
+Assume $f(x)$ is integrable on $[a,b]$ with value $I$, then
+$$\forall\varepsilon>0,\exists\delta>0\st\forall P:a=x_0<\dots<x_n=b\st\lambda<\delta,\forall\xi_i\in[x_{i-1},x_i]:\left|\sum_{i=1}^nf(\xi_i)\Delta x_i-I\right|<\frac{\varepsilon}{2}\implies$$
+$$\forall[x_{i-1},x_i],\exists\xi_i\st0\le M_i-f(\xi_i)<\frac{\xi}{2(b-a)}\implies\left|\overline{S}(P)-\sum_{i=1}^nf(\xi_i)\Delta x\right|=\sum_{i=1}^n[M_i-f(\xi_i)]\Delta x_i<\frac{\varepsilon}{2(b-a)}\cdot(b-a)=\frac{\varepsilon}{2}$$
+$$\implies\left|\overline{S}(P)-I\right|\le\left|\overline{S}(P)-\sum_{i=1}^nf(\xi_i)\Delta x_i\right|+\left|\sum_{i=1}^nf(\xi_i)\Delta_i-I\right|<\frac{\varepsilon}{2}+\frac{\varepsilon}{2}=\varepsilon$$
+\null\hfill{Prove the other direction as an exercise}\\
+\textbf{Definition: Oscillation} $\omega_i:=M_i-m_i$\\
+\textbf{Corollary:} $\lim\limits_{\lambda\to0}\sum\limits_{n=1}^n\omega_i\Delta x_i=0\iff f(x)$ is integrable on $[a,b]$\\
+\textbf{Proof:}
+$$\lim_{\lambda\to0}\sum_{n=1}^nM_i\Delta x_i=\lim_{\lambda\to0}\sum_{n=1}^nm_i\Delta x_i\iff\lim_{\lambda\to0}\sum_{n=1}^n(M_i-m_i)\Delta x_i=0$$
+\textbf{Corollary(a) : }If $f(x)$ is integrable on $[a,b]$, it is integrable on $[a',b']\subset[a,b]$\\
+\textbf{Proof:}\\
+$f(x)$ is integrable on $[a,b]\implies\forall\varepsilon,\exists\delta\st\forall P(\st\lambda<\delta):\sum\omega\Delta x<\varepsilon$\\
+Suppose $P:[a,b]\mapsto\{x_n\mid a=x_1<\dots<x_n=b\}$
+$$P^*:[a,b]\mapsto P[a,b]\cup\{a',b'\},P':[a',b']\mapsto(P[a,b]\cap[a',b'])\cup\{a',b'\}\implies\sum\omega\Delta x\geq\sum\omega^*\Delta x^*\geq\sum\omega'\Delta x'$$
+\textbf{Corollary1: }Closed interval continuous$\implies$Integrable\\
+\textbf{Proof:}
+$$f(x)\mbox{ is continuous on }[a,b]\iff f(x)\mbox{ is uniformly continuous on }[a,b]\implies
+\forall\varepsilon>0,\exists\delta>0\st\forall x',x''\in[a,b]:$$
+$$|x'-x''|<\delta\implies|f(x')-f(x'')|<\frac{\varepsilon}{b-a}\implies\forall P\st\lambda=\max_{i=1}^n(\Delta x_{i})<\delta:$$
+$$\omega_i=\max_{x\in[x_{i-1},x_{i}]}f(x)-\min_{x\in[x_{i-1},x_{i}]}f(x)<\frac{\varepsilon}{b-a}\implies\sum_{i=1}^{n}\omega_{i}\Delta_{i}<\frac{\varepsilon}{b-a}\sum_{i=1}^{n}\Delta x_{i}=\varepsilon$$
+\textbf{Corollary2: }Closed interval monotonic$\implies$Integrable\\
+\textbf{Proof:}
+$$f(x)\nearrow\,(x\in[a,b])\implies\omega_i=f(x_{i})-f(x_{i-1})\implies\forall\varepsilon>0,\delta:=\frac{\varepsilon}{f(b)-f(a)}>0$$
+$$\sum_{i=1}^{n}\omega_{i}\Delta x_{i}=\sum_{i=1}^{n}[f(x_{i})-f(x_{i-1})]\cdot\Delta x_{i}<\frac{\varepsilon}{f(b)-f(a)}\sum_{i=1}^{n}[f(x_{i})-f(x_{i-1})]=\frac{\varepsilon}{f(b)-f\left(a\right)}\left[f\left(b\right)-f\left(a\right)\right]=\varepsilon$$
+\textbf{Corollary3: }Function bounded and discontinuous on finite points in closed interval$\implies$Integrable\\
+\textbf{Proof:}\\
+Let the discontinuous points of $f(x)$ on $[a,b]$ be $a\leq p_1'<\dots<p_k'\leq b,d:=\min\limits_{i=1}^{k-1}(p_{i+1}'-p_i')$\\
+Suppose $p_1'\neq a,p_k'\neq b$, then $\forall\varepsilon>0,\delta':=\min\left\{\dfrac{p_1'-a}{2},\dfrac{b-p_k'}{2},\dfrac{d}{3},\dfrac{\varepsilon}{4k(M-m)}\right\}>0$
+$$\implies[a,b]=[a,p_1'-\delta]\cup[p_1'-\delta,p_1'+\delta]\cup[p_1'+\delta,p_2'-\delta]\cup\dots\cup[p_k'+\delta,b]$$
+According to corollary1, $f(x)$ is integrable on:
+$$D^{(1)}:=[a,p_1'-\delta],D^{(j)}:=[p_{j-1}'+\delta,p_j'-\delta]\,(j=2,\dots,k),D^{(k+1)}:=[p_k'+\delta,b]$$
+Hence on each $D^{(j)},\exists P^{(j)}:x_0^{(j)}<\dots<x_{l_j}^{(j)}\st\sum\limits_{i=1}^{l_j}\omega_i^{(j)}\Delta x_i^{(j)}<\dfrac{\varepsilon}{2(k+1)},\,\omega_j':=$ oscillation on $[p_j'-\delta,p_j'+\delta]$\\
+$P:\displaystyle\sum_{j=1}^{k+1}P^{(j)}\implies$
+$$\sum_{i=1}^n\omega_i\Delta x_i\le\sum_{j=1}^{k+1}\sum_{i=1}^{l_j}\omega_{i}^{(j)}\Delta x_i^{(j)}+\sum_{j=1}^{k}\omega_j'[(p_j'+\delta)-(p_j'-\delta)]<(k+1)\cdot\frac{\varepsilon}{2(k+1)}+\frac{2\varepsilon}{4k\left(M-m\right)}\cdot k\left(M-m\right)=\varepsilon$$
+If the two boundries are discontinuous $f^*(x):=\begin{cases}
+    0&x<a\\
+    f(x)&x\in[a,b]\\
+    0&x>b\
+\end{cases}$ is integrable on $\R$, thus $f(x)$ is integrable on $[a,b]$\\
+\textbf{Example:} The Riemann Function is integrable $\mathcal{R}(x):=\begin{cases}
+    \dfrac{1}{p}&x=\dfrac{q}{p}\st(p\in\mathbb{Z},q\in \mathbb{N}^+)\land(p,q\neq0)\land p\perp q\\
+    1&{x=0}\\
+    0&x\in\R\symbol{92}\mathbb{Q}\\
+\end{cases}$\\
+\textbf{Proof:}\\
+On $[0,1]$, for any $\varepsilon$, there are a finite number of $x\st f(x)>\dfrac{\varepsilon}{2}$, let them be $x_1'<\dots<x_k'=1$\\
+\null\hfill{Finish the proof imitating the proof for corollary3 as an exercise}
+\subsection{Basic Properties}
+\textbf{Linearity: }(follows from the same law for limits)\\
+\textbf{Multiple of integrable functions is integrable:}\\
+\textbf{Proof:}
+$$\forall P:[a,b]\mapsto\{x_n\}\st a=x_1<\dots<x_n,\exists M\st\forall x\in[a,b]:|f(x)|,|g(x)|\leq M$$
+$$\forall \hat{x},\bar{x}\in[x_{i-1},x_i]:|f(\hat{x})g(\hat{x})-f(\bar{x})g(\bar{x})|\leq|f(\hat{x})-f(\bar{x})|\cdot|g(\hat{x})|+|g(\hat{x})-g(\bar{x})|\cdot|f(\bar{x})|\leq M\left(\omega_i^f+\omega_i^g\right)$$
+$$\forall\varepsilon>0,\exists\delta\st\forall P(\st\lambda<\delta):\sum_{i=1}^n\omega_i^f\Delta x_i<\frac{\varepsilon}{2M}\land\sum_{i=1}^n\omega_i^g\Delta x_i<\frac{\varepsilon}{2M}$$
+$$\implies\sum_{i=1}^n\omega_i^{fg}\Delta x_i\le\sum_{i=1}^n M\left (\omega_i^f+\omega_i^g\right)\Delta x_i=M\left(\sum_{i=1}^n\omega_i^f\Delta x_i+\sum_{i=1}^n\omega_i^g\Delta x_i\right)<M\left(\frac{\varepsilon}{2M}+\frac{\varepsilon}{2M}\right)=\varepsilon$$
+\textbf{Convervation of Positivity: }(follows from the same law for limits)\\
+This result clearly implies that $\forall x\in[a,b]:f(x)\geq g(x)\implies\displaystyle\int_a^b f(x)dx\geq\displaystyle\int_a^b g(x)dx$\\
+\textbf{Absolute integrability:}\\
+$f(x)$ is integrable on $[a,b]\implies |f(x)|$ is integrable on $[a,b]$ and $\left|\displaystyle\int_a^bf(x)dx\right|\le\displaystyle\int_a^b|f(x)|dx$\\
+\textbf{Proof:}
+$$\forall x_1,x_2\in[a,b]:||f(x_1)|-|f(x_2)||\le|f(x_1)-f(x_2)|\implies$$
+The oscilators of $|f(x)|$ with respect to each partition is smaller than the according oscilators of $f(x)$\\
+$$-|f(x)|\le f(x)\le|f(x)|\implies-\int_a^b|f(x)|dx\le\int_a^bf(x)dx\le\int_a^b|f(x)|dx\implies\left|\int_a^bf(x)dx\right|\le\int_a^b|f(x)|dx$$
+\textbf{Corollary:}\\
+$f(x)$ is integrable on $[a,b]\iff\forall c\in[a,b]:f(x)$ is integrable on $[a,c],[c,b]$ and $\displaystyle\int_a^bf(x)dx=\int_a^cf(x)dx+\displaystyle\int_c^bf(x)dx$\\
+\textbf{Proof:}\\
+$f(x)$ is integrable on $[a,b]\iff\forall\varepsilon,\exists\delta\st\forall P(\st\lambda<\delta):\sum\limits_{i=1}^n\omega_i\Delta x_i<\varepsilon$.\\
+For any such $P,P':=\begin{cases}
+    P:a=x_0<\dots<x_k=c<\dots<x_{n}=b&\exists k\st x_k=c\\
+    P+c:a=x_0<\dots<x_k=c<\dots<x_{n}=b&\mbox{otherwise}
+\end{cases}$\\
+Then $\begin{cases}
+    P_{ac}:a=x_0<\dots<x_k=c\mbox{ is a partition of }[a,c]\\
+    P_{cb}:c=x_k<\dots<x_n=c\mbox{ is a partition of }[c,b]
+\end{cases}\implies\sum\limits_{i=1}^k\omega_i\Delta x_i+\sum\limits_{i=k+1}^n\omega_i\Delta x_i<\overline{S}(P)-\underline{S}(P)<\varepsilon$
+$\implies\sum\limits_{i=1}^k\omega_i\Delta x_i,\sum\limits_{i=k+1}^n\omega_i\Delta x_i<\varepsilon$\\
+$f(x)$ is integrable on $[a,c],[c,b]\implies$
+$$\forall\varepsilon,\exists\delta\st\forall P_{ac}:a=x_0'<\dots<x_k'<c,P_{cb}:c=x_0^*<\dots<x_l^*=b(\st\lambda<\delta):\sum_{i=1}^k\omega_i'\Delta x_i',\sum_{i=1}^l\omega_i^*\Delta x_i^*<\dfrac{\varepsilon}{2}$$
+$P:=P_{ac}+P_{cb},\implies \sum\limits_{i=1}^{l+k}\omega_i\Delta x_i<\dfrac{\varepsilon}{2}+\dfrac{\varepsilon}{2}=\varepsilon$\\
+\textbf{First Intermediate value theorem of integration:}\\
+Suppose $f(x),g(x)$ are integrable on $[a,b]\land\forall x\in[a,b],g(x)\geq0\,(g(x)\le0)$, then
+$$\exists\eta\in[m,M]\st\int_a^bf(x)g(x)dx=\eta\int_a^bg(x)dx,\mbox{ if }f(x)\mbox{ is continuous, then }\eta=f(\xi)\,(\xi\in[a,b])$$
+\null\hfill{Prove as an exercise}\\
+\textbf{Hölder Inequality:}
+$$\forall p,q>0\st\frac{1}{p}+\frac{1}{q}=1:f(x)g(x)\le\frac{1}{p}f^p(x)+\frac{1}{q}g^q(x)\land\int_a^b|f(x)g(x)|dx\le\left(\int_a^b|f(x)|^pdx\right)^\frac{1}{p}\left(\int_a^b|g(x)|^q\right)^\frac{1}{q}$$
+\textbf{Proof:} (equation 1)
+$$\frac{1}{p}f^p(x)+\frac{1}{q}g^q(x)=\frac{1}{p}\exp(p\ln f(x))+\frac{1}{q}\exp(q\ln g(x))\geq\exp\left(\frac{1}{p}\cdot(p\ln f(x))+\frac{1}{q}(q\ln g(x))\right)=f(x)g(x)$$
+\textbf{Proof:} (equation 2)
+$$\varphi(x):=\frac{|f(x)|}{\left(\displaystyle\int_a^b|f(x)|^pdx\right)^\frac{1}{p}},\psi(x):=\frac{|g(x)|}{\left(\displaystyle\int_a^b|g(x)|^qdx\right)^\frac{1}{q}}\implies$$
+$$\frac{\left|f\left(x\right)g\left(x\right)\right|}{\left(\displaystyle\int_a^b|f(x)|^pdx\right)^\frac{1}{p}\left(\displaystyle\int_a^b|g(x)|^qdx\right)^\frac{1}{q}}\leq\frac{|f(x)|^p}{p\left(\displaystyle\int_a^b|f(x)|^pdx\right)}+\frac{|g(x)|^q}{q\left(\displaystyle\int_a^b|g(x)|^qdx\right)}\implies$$
+$$\frac{\displaystyle\int_a^b|f(x)g(x)|dx}{\left(\displaystyle\int_a^b|f(x)|^pdx\right)^\frac{1}{p}\left(\displaystyle\int_a^b|g(x)|^qdx\right)^\frac{1}{q}}\le\frac{\displaystyle\int_a^b|f(x)|^pdx}{p\left(\displaystyle\int_a^b|f(x)|^pdx\right)}+\frac{\displaystyle\int_a^b|g(x)|^qdx}{q\left(\displaystyle\int_a^b|g(x)|^qdx\right)}=\frac{1}{p}+\frac{1}{q}=1$$
+$$\implies\int_a^b|f(x)g(x)|dx\le\left(\int_a^b|f(x)|^pdx\right)^{\frac{1}{p}}\left(\int_a^b|g(x)|^{q}dx\right)^\frac{1}{q}$$
+\textbf{Jensen inequality of integration:}\\
+Suppose $\varphi(t)$ is continuous on $[a,b],f(x)$ is defined on $\R$ and $f''(x)\geq0\implies f\left(\dfrac{1}{a}\displaystyle\int_0^a\varphi(t)dt\right)\le\dfrac{1}{a}\displaystyle\int_0^af(\varphi(t))dt$\\
+\textbf{Proof:}\\
+Substitute $x=\dfrac{t}{a},\psi(x):=f(t)$, then the result is equivalent to: $f\left(\displaystyle\int_0^1\psi(x)dx\right)\le\displaystyle\int_0^1f(\psi(x))dx$.\\
+Take the limit on both sides of the Jensen inequality: $f\left(\sum\limits_{i=1}^n\psi(\xi_i)\Delta x_i\right)\le\sum\limits_{i=1}^nf(\psi(\xi_i))\Delta x_i$\\
+\textbf{Example1:}
+$$f\left(\frac{a+b}{2}\right)=0,M=\sup_{a\le x\le b}|f''(x)|\implies \int_{a}^{b}f(x)dx\le \frac{M(b-a)^3}{24}$$
+\textbf{Proof:}
+$$f(x)=f\left(\frac{a+b}{2}\right)+f'\left(\frac{a+b}{2}\right)\left(x-\frac{a+b}{2}\right)+\frac{1}{2}f''(\xi)\left(x-\frac{a+b}{2}\right)^2$$
+$$\implies\int_a^bf(x)dx=f'\left(\frac{a+b}{2}\right)\int_a^b\left(x-\frac{a+b}{2}\right)dx+\frac{1}{2}f'(\xi)\int_a^b\left(x-\frac{a+b}{2}\right)^2dx=\frac{1}{2}f''(\xi)\int_a^b\left(x-\frac{a+b}{2}\right)^2dx$$
+$$\le\left|\int_a^bf(x)dx\right|\le\frac{1}{2}|f''(\xi)|\int_a^b\left(x-\frac{a+b}{2}\right)^2dx=\frac{M(b-a)^3}{24}$$
+\textbf{Example2:}
+$$\forall h<s:f(x),f(x+h)\mbox{ are
+integrable on }[a,b]\implies\lim_{h\to 0}\int_a^b|f(x+h)-f(x)|dx=0$$
+$$\text{The}\;\text{result}\;\text{is}\;\text{equivalent}\;\text{to}:\forall \varepsilon>0,\exists P:a=x_{0}<\dots<x_{n}=b\;\text{s.t.}\;\sum_{i=1}^{n}\omega_{i}\Delta x_{i}<\varepsilon$$
+\textbf{Proof:}
+$$P_{0\leq i\leq n}:x_{i}=a+i\frac{b-a}{n}\implies\Delta x_{i}=\frac{b-a}{n},\int_{a}^{b}\left|f\left(x+h\right)-f\left(x\right)\right|dx=\sum_{i=1}^{n}\int_{x_{i-1}}^{x_{i}}\left|f\left(x+h\right)-f\left(x\right)\right|dx$$
+$$\mbox{Let}\;\left|h\right|<\frac{b-a}{n},x\in\left[x_{i-1},x_{i}\right]$$ $$\implies\begin{cases}
+    {\left|f\left(x+h\right)-f\left(x\right)\right|\leq\left|f\left(x+h\right)-f\left(x_{i}\right)\right|+\left|f\left(x_{i}\right)-f\left(x\right)\right|\leq \omega_{i+1}+\omega_{i}}&{h>0}\\
+    {\left|f\left(x+h\right)-f\left(x\right)\right|\leq\left|f\left(x+h\right)-f\left(x_{i-1}\right)\right|+\left|f\left(x_{i-1}\right)-f\left(x\right)\right|\leq \omega_{i-1}+\omega_{i}}&{h<0}
+\end{cases}$$
+$$\implies\left|f\left(x+h\right)-f\left(x\right)\right|\leq \omega_{i-1}+\omega_{i}+\omega_{i+1}\land\omega_{0},\omega_{n}<2M\frac{b-a}{n}\implies$$
+$$\,\delta:=\frac{b-a}{n}\implies\exists n\,\;\text{s.t.}\;0\leq\sum_{i=1}^{n}\int_{x_{i-1}}^{x_{i}}\left|f\left(x+h\right)-f\left(x\right)\right|dx\leq3\sum_{i=1}^{n}\omega_{i}\Delta x_{i}+2M\frac{b-a}{n}<3\left(\frac{\varepsilon}{6}\right)+2\left(\frac{\varepsilon}{4}\right)=\varepsilon$$
+\textbf{Example3:}
+$$\forall \text{continuous}f\left(x\right),g\left(x\right)s.t.f\left(x\right)\geq0,g\left(x\right)>0,\lim_{n\to\infty}\left(\int_{a}^{b}f^n(x)g(x)dx\right)^{\dfrac{1}{n}}=\max_{a\le x\le b}f(x)$$
+\textbf{Proof:}
+$$\mbox{Suppose }0<m\le g(x)\le M,\max_{a\le x\le b}f(x)=f(\xi)=A\implies$$
+$$\forall\varepsilon\in(0,A),\exists[\alpha,\beta]\subset\left[a,b\right]\st\xi\in[\alpha,\beta]\land\forall x\in[\alpha,\beta]:0<A-\varepsilon <f\left(x\right)\leq A\implies$$
+$$\left[m(\beta-\alpha)(A-\varepsilon)^n\right]^\frac{1}{n}<\left(\int_a^bf^n(x)g(x)dx\right)^{\dfrac{1}{n}}\le\left[M(b-a)A^{n}\right]^{\dfrac{1}{n}}$$
+Clearly, $\exists N\st\forall n>N:A-2\varepsilon<\left(\int_a^bf^n(x)g(x)dx\right)^{\dfrac{1}{n}}<A+\varepsilon\quad\square$
+\subsection{The Fundamental Theorem of Calculus}
+\textbf{The Newton-Leibniz formula}\\
+Suppose $f(x)$ is integrable on $[a,b],F(x):=\displaystyle\int_a^xf(t)dt,x\in[a,b]\implies\begin{cases}
+    F(x)\mbox{ is continuous on }[a,b]\\
+    f(x)\mbox{ continuous on }[a,b]\implies F'(x)=f(x)
+\end{cases}$\\
+\textbf{Proof of result1:}
+$$F(x+\Delta x)-F(x)=\int_a^{x+\Delta x}f(t)dt-\int_a^{x}f(t)dt=\int_x^{x+\Delta x}f(t)dt,M:=\max_{a\le x\le b}f(x),m:=\min_{a\le x\le b}f(x)\implies$$
+$$F(x+\Delta x)-F(x)=\begin{cases}
+    \eta\Delta x&\eta \in[m,M],f(x)\mbox{ is integrable}\\
+    f(\xi)\Delta x&\xi\in[x,\Delta x],f(x)\mbox{ is continuous}
+\end{cases}\implies\lim_{\Delta x\to 0}F(x+\Delta x)-F(x)=0$$
+\textbf{Proof of result2:}
+$$F'(x)=\lim_{\Delta x\to 0}\frac{F\left(x+\Delta x\right)-F\left(x\right)}{\Delta x}=\lim_{\Delta x\to 0}f\left(\xi\right)=f\left(x\right)\iff\frac{d}{dx}\int_a^xf(t)dt=f(x)$$
+\textbf{The Fundamental Theorem of Calculus:}\\
+Suppose $F(x)$ is an anti-derivative of $f(x)$, then $\displaystyle\int_a^bf(x)dx=F(b)-F(a)$\\
+\textbf{Proof:}\\
+It is known that $\displaystyle\int_a^xf(t)dt$ is an anti-derivative of $f(x)\implies\displaystyle\int_a^xf(t)dt=F(x)+C$, substituting $x=a\implies C=-F(a)$\\
+Then substitute $x=b$, we get $\displaystyle\int_a^bf(x)dx=F(b)-F(a)\quad\square$
+If we treat $\int f(x)dx$ as any particular anti-derivative of $f(x)$, then we have $\displaystyle\int_a^bf(x)dx=\left[\displaystyle\int f(x)dx\right]_a^b$\\
+\textbf{Substitution of definite integral}\\
+Suppose $f(x)$ is continuous on $[a,b],x=\varphi(t)$ has continuous derivative on $[\alpha,\beta],[a,b]$ is a subset of the co-domain of $\varphi(T)$, and $\varphi(\alpha)=a,\varphi(\beta)=b$, then: $\displaystyle\int_a^bf(x)dx=\displaystyle\int_\alpha^\beta f(\varphi(t))\varphi'(t)dt$\\
+\textbf{Proof:}\\
+$F(x)$ is an anti-derivative of $f(x)\implies F(\varphi(t))$ is an anti-derivative of $f(\varphi(t))\varphi'(t)\implies$\\
+$$\int_\alpha^\beta f(\varphi(t))\varphi'(t)dt=F(\varphi(\beta))-F(\varphi(\alpha))=F(b)-F(a)=\int_a^bf(x)dx$$
+\textbf{Young's Inequality:}\\
+$y=f(x)$ is continuous and strictly increasing on $[0,+\infty)$, and $f(0)=0\implies\displaystyle\int_0^af(x)dx+\displaystyle\int_0^bf^{-1}(y)dy\geq ab$\\
+\textbf{Proof:}\\
+Suppose $F(a)=\displaystyle\int_0^af(x)dx+\int_{0}^{b}f^{-1}\left(y\right)dy-ab,F'\left(a\right)=f\left(a\right)-b,b:=f(T)$ then when $a\in(0,T):F(a)\searrow$, when $a\in(T,+\infty):F(a)\nearrow$. Hence clearly, $T$ is the minimum.\\
+To prove that $F(T)=0$, consider the geometric meaning of $\sum\limits_{i=1}^nf(x_i)(x_i-x_{i-1})+\sum\limits_{i=1}^nx_{i-1}(f(x_i)-f(x_{i-1}))$ 
+Define a basis of $V=P_\infty(\R),B:=\{g_i(x)\mid i\in\N\}$, define inner product,$\langle g_m(x),g_n(x)\rangle:=\displaystyle\int_a^bg_m(x)g_n(x)dx$\\
+\textbf{Corollary1:}\\
+$\left\{\sqrt{\dfrac{2n+1}{2}}\cdot p_n(x)\,\middle\vert\,n\in\N\land p_n(x)=\dfrac{1}{2^nn!}\cdot\dfrac{d^n}{dx^n}\left(x^2-1\right)^n\right\}$ is an orthonormal basis on $[-1,1]$ with respect to:
+$$\langle a(x),b(x)\rangle =\displaystyle\int_{-1}^1a(x)b(x)dx$$
+\textbf{Proof:}\\
+The corollary is equivalent to: $\displaystyle\int_{-1}^1p_m(x)p_n(x)dx=\begin{cases}
+    0&m\neq n\\
+    \dfrac{2}{2m+1}&m=n
+\end{cases}$
+\begin{equation}
+\begin{split}
+    \mbox{Suppose }n\geq m,I_{mn}:&=m!n!2^{m+n}\displaystyle\int_{-1}^1p_m(x)p_n(x)dx=\displaystyle\int_{-1}^1\dfrac{d^m}{dx^m}\left(x^2-1\right)^m\dfrac{d^n}{dx^n}\left(x^2-1\right)^ndx\\
+    &=\left[\frac{d^{m}}{dx^{m}}\left(x^{2}-1\right)^{m}\frac{d^{n-1}}{dx^{n-1}}\left(x^{2}-1\right)^{n}\right]_{-1}^{1}-\int_{-1}^{1}\frac{d^{m+1}}{dx^{m+1}}\left(x^{2}-1\right)^{m}\frac{d^{n-1}}{dx^{n-1}}\left(x^{2}-1\right)^{n}dx\\
+\end{split}
+\end{equation}
+Clearly, $\left(x^{2}-1\right)$ is a factor of $\dfrac{d^{n-k}}{dx^{n-k}}\left(x^2-1\right)^n\implies I_{mn}=-\displaystyle\int_{-1}^1\frac{d^{m+1}}{dx^{m+1}}\left(x^2-1\right)^m\dfrac{d^{n-1}}{dx^{n-1}}\left(x^2-1\right)^ndx$\\
+Repeat the above procedure, we have:
+$$I_{mn}=(-1)^n\int_{-1}^1\left(\frac{d^{m+n}}{dx^{m+n}}\left(x^2-1\right)^m\right)\left(x^2-1\right)^{n}dx\implies\dfrac{d^{m+n}}{dx^{m+n}}\left(x^{2}-1\right)^{m}=\begin{cases}
+    0&n>m\\
+    (2n)!&m=n
+\end{cases}\implies$$
+$$I_{mn}=\begin{cases}
+    0&n>m\\
+    (2n)!\displaystyle\int_{-1}^1(1-x)^n(1+x)^ndx=\dfrac{(2n)!n}{n+1}\displaystyle\int_{-1}^{1}\left(1-x\right)^{n-1}\left(1+x\right)^{n+1}dx&(m=n)\\
+    =...=\dfrac{(2n)!n!}{2n\cdot...\cdot(n+1)}\displaystyle\int_{-1}^{1}\left(1+x\right)^{2n}dx=\frac{\left(2n\right)!\left(n!\right)^{2}}{\left(2n\right)!}\cdot\frac{2^{2n+1}}{2n+1}=\frac{\left(n!\right)^{2}\cdot2^{2n+1}}{2n+1}
+\end{cases}$$
+$\implies||p_n(x)||^2=\dfrac{2}{2n+1}\quad\square$\\
+\textbf{Corollary2:}\\
+Suppose $a,x\in\R$, define vector space $V$ with basis $1,\sin x,\cos x,\dots,\sin(nx),\cos(nx),\dots$\\
+This basis is orthonormal with respect to: $\forall v_1,v_2\in V,\langle v_1,v_2\rangle:=\displaystyle\int_a^{a+2\pi}v_1\cdot v_2dx$\\
+\textbf{Proof:}\\
+It is easy to prove with substitution: $\displaystyle\int_a^{a+2\pi }v_1\cdot v_2dx=\displaystyle\int_{-\pi}^{\pi }v_{1}\cdot v_{2}dx\implies$\\
+$\begin{cases}
+    \displaystyle\int_{-\pi}^\pi \sin(mx)\cos(nx)dx=0&\sin(mx)\cos(nx)\mbox{ is odd}\\
+    \displaystyle\int_{-\pi}^{\pi}\sin mx\sin nxdx=\int_{0}^\pi2\sin mx\sin nxdx=\int_{0}^\pi\cos(m-n)x-\cos (m+n)xdx&\sin(mx)\cos(nx)\mbox{ is even}\\
+    =\begin{cases}
+        \left[\dfrac{\sin(m-n)x}{m-n}-\dfrac{\sin(m+n)x}{m+n}\right]_{0}^{\pi}=0&m\neq n\\
+        \left[x-\dfrac{\sin2mx}{2m}\right]_0^\pi=\pi&m=n
+    \end{cases}
+\end{cases}$\\
+Similarly:$\displaystyle\int_{-\pi}^\pi\cos mx\cos nxdx=\begin{cases}
+    0&m\neq n\\
+    \pi&m=n\neq0\\
+    2\pi&m=n=0
+\end{cases}$
+\subsection{Applications of Proper Integrals}
+\subsubsection{Integral under the Polar Coordinate}
+For any Riemann integrable $r(\theta)$, $\theta\in\mathbb{R}$, create a partition ${\bf{P}}:\theta_0,...,\theta_n$ between $[\alpha,\beta]$ s.t. $\alpha=\theta_0 <\dots< \theta_n=\beta$ let $\Delta\theta_i=\theta_i-\theta_{i-1}$let $\xi_i$ be a random point on $[\theta_{i-1},\theta_i]$ and the radius within $[\theta_{i-1},\theta_i]$ be $r(\xi_i)$, thus the approximation of the area in $[\theta_{i-1},\theta_i]$ will be $$\frac{r^2(\xi_i)\Delta\theta_i}{2}$$
+Summing up the area and applying the definition of Riemann integral lead to:
+$$\lim_{\max(\Delta\theta_i)\to0}\sum_{i=1}^{n}\frac{r^2(\xi_i)\Delta\theta_i}{2}=\frac{1}{2}\int_{\alpha}^{\beta}r^2(\theta)dx$$
+
+\subsubsection{Length of a curve}
+
+{\bf{Definition of length:}}\\
+let the parametric equation of a 2D curve be:
+$$\left\{
+        \begin{array}{ll}
+             x=r(t),&\\
+             y=r(t),&
+        \end{array}
+    t\in[T_1,T_2]
+    \right.$$
+Create partition ${\bf{P:}}$ $T_1=t_0<\dots<t_n=T_2$, this partition creates a set of $n+1$ points: $P_0,\dots,P_n\st P_i=(x(t_i),y(t_i))$ let $\overline{P_{i-1}P_{i}}$ be the length of the line segment between $P_{i-1}$ and $P_i$, let the length of the curve $\textit{\textbf{l}}$ be $$\lim_{\max\Delta t\to0}\sum_{i=1}^n\overline{P_{i-1}P_{i}}$$\\
+{\bf{Integral form:}}
+$$\overline{P_{i-1}P_i}=\sqrt{[x(t_{i-1})-x(t_i)]^2+[y(t_{i-1})-y(t_i)]^2}$$
+If $x(t)$ and $y(t)$ is {\textit{\textbf{smooth}}} - continuous in $[T_1,T_2]$ and differentiable in $(T_1,T_2)$, then: $x(t_i)-x(t_{i-1})=x'(\eta_i)\Delta t_i$ and $y(t_i)-y(t_{i-1})=y'(\sigma_i)\Delta t_i$ thus:
+$$\lim_{\max\Delta t\to0}\sum_{i=1}^n\overline{P_{i-1}P_{i}}=\lim_{\max\Delta t\to0}\sum_{i=1}^n{\Delta}t_i\sqrt{[x'(\eta_i)]^2+[y'(\sigma_i)]^2}$$
+$$\implies\lim_{\max\Delta t\to0}\left|\sum_{i=1}^n{\Delta}t_i\sqrt{[x'(\xi_i)]^2+[y'(\xi_i)]^2}-\sum_{i=1}^n{\Delta}t_i\sqrt{[x'(\eta_i)]^2+[y'(\sigma_i)]^2}\right|$$
+$$\le\lim_{\max\Delta t\to0}\sum_{i=1}^n{\Delta}t_i\left|\sqrt{[x'(\xi_i)]^2+[y'(\xi_i)]^2}-\sqrt{[x'(\eta_i)]^2+[y'(\sigma_i)]^2}\right|$$
+It is known that:
+\begin{equation}
+    |\sqrt{x_1^2+x_2^2}-\sqrt{y_1^2+y_2^2}|\le\sqrt{(x_1-y_1)^2+(x_2-y_2)^2}\le|x_1-y_1|+|x_2-y_2|
+\end{equation} 
+\null\hfill\textit{The first inequality is derived in the appendix\\}
+\null\hfill\textit{The second inequality is a clever application of the triangle inequality}
+$$(2)\implies(1)\le\sum_{i=1}^n\Delta{t_i}(|x'(\eta_i)-x'(\xi_i)|+|y'(\sigma_i)-y'(\xi_i)|)\le\sum_{i=1}^n\bar{\omega}_i\Delta{t_i}+\sum_{i=1}^n\tilde{\omega}_i\Delta{t_i}$$
+$$\implies\textit{\textbf{l}}=\int_{T_1}^{T_2}\sqrt{[x'(t)]^2+[y'(t)]^2}dt$$
+\subsubsection{Length integral in different systems}
+{\bf{Cartesian Coordinates:}}
+$$f(x)\in[a,b]=\left\{
+        \begin{array}{ll}
+             x=x,&\\
+             y=f(x),&
+        \end{array}
+    x\in[a,b]
+    \right.\implies{\textit{\textbf{l}}}=\int_a^b\sqrt{1+[f'(x)]^2}dx$$
+{\bf{Polar Coordinates:}}
+$$r(\theta)\in[\alpha,\beta]=\left\{
+        \begin{array}{ll}
+             x=r(\theta)\cos{\theta},&\\
+             y=r(\theta)\sin{\theta},&
+        \end{array}
+    \theta\in[\alpha,\beta]
+    \right.$$
+$$x'(\theta)=r'(\theta)\cos(\theta)-r(\theta)\sin(\theta) y'(\theta)=r'(\theta)\sin(\theta)-r(\theta)\cos(\theta)\implies{\textit{\textbf{l}}}=\int_{\alpha}^{\beta}\sqrt{[r(\theta)]^2+[r'(\theta)]^2}dx$$
+{\bf{Length in finite dimensions:}}\\
+Under the same conditions, it is not difficult to prove that:$$\textit{\textbf{l}}_n=\int_{T_1}^{T_2}\sqrt{\sum_{i=1}^{n}[d_i'(t)]^2}$$
+\subsubsection{Surface area of revolution}
+Under the same assumptions, clearly, $\Delta S_i=2\pi\left[\dfrac{y(t_{i-1})+y(t_i)}{2}\right]\cdot\overline{P_{i-1},P_i}$, define the surface area $S$ be as:
+$$S=\lim_{\max({\Delta{t}_i)}\to0}\sum_{i=1}^n\Delta S_i=\pi\lim_{\max({\Delta{t}_i)}\to0}\sum_{i=1}^n[y(t_{i-1})+y(t_i)]*\overline{P_{i-1},P_i}$$
+$$=2\pi\int_{T_1}^{T_2}y(t)\sqrt{[x'(t)]^2+[y'(t)]^2}dt=2\pi\int_{T_1}^{T_2}y(t)dl$$
+\null\hfill\textit{Proof the second last equality as an exercise}
+\subsubsection{Volume across one dimension}
+The $n$ dimensional volume of a $n$ dimensional object on space $\mathbb{R}^n$ across [a,b] with respect to one variable $x$ s.t. span$(x)=X$ can be defined as:
+$$\int_a^bV_{n-1}(x)dx$$
+Where $V_{n-1}(x)$ denotes the $n-1$ dimensional volume on $\mathbb{R}^n\symbol{92}X$
+\subsubsection{Volume of revolution}
+It is not hard to see that:
+$$V=\pi\int_a^bf^2(x)dx,f(x)\in[a,b]=\left\{
+        \begin{array}{ll}
+             x=x,&\\
+             y=f(x),&
+        \end{array}
+    x\in[a,b]
+    \right.\implies{V}=\pi\int_{T_1}^{T_2}y^2(t)|x'(t)|dt$$
+\subsubsection{Curvature}
+For any smooth curve $C$, $\forall{A},B$ on $C$ s.t. $A<B$, let the length between $A$ and $B$ be $\Delta{s}$, draw tangents on $A$ and $B$: $\tau_A$ and $\tau_B$, assuming that neither of the tangents are parallel to the y axis and the slope of the two lines are not equal, let the unit directional vector on $\tau_A$ and $\tau_B$ be $v_A$ and $v_B$, let $\varphi=\arccos{(v_A\cdot{v}_B)}$. define average curvature $\bar{K}$ as: $$\overline{K}=\frac{\Delta{\varphi}}{\Delta{s}}$$
+Define the curvature at point A as: $$K_A=\lim_{\Delta{s}\to0}\frac{\Delta{\varphi}}{\Delta{s}}=\frac{d\varphi}{ds}$$
+For an arc with radius $R$ and length $s$: $$\varphi=\frac{s}{R}\implies{\overline{K}}\equiv{K}=\frac{1}{R}$$
+Define {\textit{\textbf{Center of Curvature}}} as:
+\[
+  {\begin{pmatrix}
+    x(t_A)\\
+    y(t_A)\\
+  \end{pmatrix}}
+  +
+  \frac{1}{K_A}{\begin{pmatrix}
+    0 & -1\\
+    1 & 0\\
+  \end{pmatrix}}v_A
+\]
+Define the {\textit{\textbf{Curvature Circle}}} as the Circle with its center being the Center of Curvature and its radius being $\left|\dfrac{1}{K_A}\right|$\\
+For all smooth $f(x)$ s.t.
+$$f(x)=\left\{
+        \begin{array}{ll}
+             x=x(t),&\\
+             y=y(t),&
+        \end{array}\alpha\le{t}\le\beta
+    \right.$$
+And $x(t),y(t)$ are second order differentiable, 
+\begin{equation}\forall{t}\in[\alpha,\beta],f'(x)=\frac{y'(t)}{x'(t)}=\tan\varphi\implies\varphi=\arctan{\frac{y'(t)}{x'(t)}}\implies\frac{d\varphi}{dt}=\frac{x'(t)y''(t)-x''(t)y'(t)}{[x'(t)]^2+[y'(t)]^2}\end{equation}
+$$\frac{ds}{dt}=\sqrt{[x'(t)]^2+[y'(t)]^2},(2)\implies{}K=\left|\frac{\left(\dfrac{d\varphi}{dt}\right)}{\left(\dfrac{ds}{dt}\right)}\right|=\frac{d\varphi}{dt}=\frac{x'(t)y''(t)-x''(t)y'(t)}{([x'(t)]^2+[y'(t)]^2)^\frac{3}{2}}$$
+If $y=y(x)$, then:$$K=\frac{|y''|}{(1+y'^2)^\frac{3}{2}}$$
+\subsubsection{Appendix: Triangle Inequality}
+It is proven in linear algebra that: $||a+b||\le||a||+||b||$, clearly, $||v||\le||v-w||+||w||\iff||v||-||w||\le||v-w||$
+\subsection{Numerical Calculations with Definite Integrals}
+\subsubsection{The Newton-Cotes Formula}
+This method uses the Lagrange Interpolation to approximate Integrals.\\
+To approximate $f(x)\in[a,b]$, let:
+$$h=\frac{b-a}{n},x_i=a+ih\mbox{, then } f(x)\approx p_n(x)=\sum_{i=0}^nf(x_i)\left[\prod_{j=0,j\neq{}i}^n\frac{x-x_j}{x_i-x_j}\right]$$
+$$\implies\int_a^bf(x)dx\approx{}\int_a^bp_n(x)dx=(b-a)\sum_{i=0}^nC_i^{(n)}f(x_i)$$
+$$\mbox{here, }C_i^{(n)}=\frac{1}{b-a}\int_a^b\prod_{j=1,j\neq{i}}^n\frac{x-x_j}{x_i-x_j}dx(\mbox{ substitute }x=a+th)$$
+$$=\frac{h}{b-a}\int_0^n\prod_{j=0,j\neq{}i}^n\frac{t-j}{i-j}dt=\frac{1}{n}\cdot\frac{(-1)^{n-i}}{i!(n-i)!}\int_0^n\prod_{j=0,j\neq{}i}^n(t-j)dt$$
+(i) Substituting $u=n-t$, clearly, $C_i^{(n)}=C_{n-i}^{(n)}$\\
+(ii) Clearly, $C$ is independent of $f(x)$\\
+(iii) The formula is completely accurate when $f(x)\equiv{1}$:
+$$\int_a^b1dx=(b-a)\sum_{i=0}^nC_i^{(n)}=1$$
+Challenge: Workout what happens with Polynomial Interpolation when $f(x)$ is a Polynomial\\
+{\textbf{Error estimation:}} If $f^{(n+1)}(x)\in[a,b]$ is continuous, then: $$R_n(f)=\int_a^bf(x)-p_n(x)dx\le{}\frac{M_fh^{n+2}}{(n+1)!}\int_0^n\left|\prod_{j=0}^n(t-j)\right|dt\mbox{, here }M_f=\max_{x\in[a,b]}\left|f^{(n+1)}(x)\right|$$
+\textbf{Proof:}
+$$R_n(f)=\int_a^b\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=1}^n(x-x_i)dx\mbox{, here }\xi\in(x_{\min},x_{\max})$$
+$$\left|R_n(f)\right|\le\int_a^b\left|\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=1}^n(x-x_i)\right|dx\le\frac{M_f}{(n+1)!}\int_a^b\left|\prod_{i=0}^n(x-x_i)\right|dx=\frac{M_fh^{h+2}}{(n+1)!}\int_0^n\left|\prod_{j=0}^n(t-j)\right|dt$$
+\textbf{Definition: }If a Polynomial Approximation is completely accurate modelling other polynomials of degree $n$, then this Approximation has degree of accuracy $n$\\
+\textbf{Theorem}: The Newton-Cotes Formula of degree $n$ is accurate to degree $n$ for all odd $n$ and $+1$ for all even $n$\\
+\textbf{Proof:} Theorem $\iff$ the Formula is accurate for $f(x) = x^{2k+1}$
+$$\mbox{From proof for the error estimation, }\frac{R_{2k}}{h^{2k+2}}=\int_0^{2k}\prod_{j=0}^{2k}(t-j)dt=\int_{-k}^{k}\prod_{j=-k}^{k}(u+j)du(\mbox{, substitute }u=t-k)$$
+$$=(-1)^{2k+1}\int_{-k}^k\prod_{j=-k}^k(v-j)dv=-\int_{-k}^k\prod_{j=-k}^k(v+j)dv=-\frac{R_{2k}(f)}{h^{2k+2}}\mbox{, (substitute ), }v=-u\implies R_{2k}(f)=0$$
+\subsubsection{The Composite Newton-Cotes Method}
+Combining low order Newton-Cotes formula many small intervals\\
+\textbf{The Trapezium Formula}\\
+let $h=\dfrac{b-a}{m},x_i=a+ih$, then use the first order Newton-Cotes formula on each inteval.
+$$T_m^{(1)}=\int_a^bf(x)dx=\sum_{i=1}^m\int_{x_{i-1}}^{x_i}f(x)dx\approx{}\frac{h}{2}\sum_{i=1}^m\left[f(x_{i-1}),+f(x_i)\right]=\frac{h}{2}\left[f(a)+f(b)+2\sum_{i=1}^{m-1}f(x_i)\right]$$
+It is not hard to proof that the error of the above method is $O((b-a)h^2)$\\
+The above method can be extended using Extrapolation:
+$$T_m^{(k+1)}=\frac{{4^k}T_{2m}^{(k)}-T_m^{(k)}}{4^k-1}$$
+This is called the Romberg method, the proof for this result can be found in Numerical Analysis
+\subsubsection{Gaussian Quadrature}
+If for some set of $\left\{x_i\right\}_{i=0}^n$ and $\left\{a_i^{(n)}\right\}_{i=0}^n$, for any $p_{2n+1}$ there is:
+$$\int_a^bp_{2n+1}(x)dx=\sum_{i=0}^na_i^{(n)}p_{2n+1}(x_i)$$
+Then $\sum\limits_{i=0}^na_i^{(n)}f(x_i)$ is a Gauss Quadrature
+
+Substituting $f(x)=\prod\limits_{i=0}^n(x-x_i)^2$, the LHS of the Quadrature is always greater than $0$ but the RHS equals to $0$, thus the statement can't be fulfilled for $p_{2n+2}$
+
+The roots of the Legendre Polynomial $\left\{x_i^*\right\}_{i=0}^n$ and 
+$$a_i^{(n)}=\int_{-1}^1\prod_{j=0,j\neq{}i}^n\frac{x-x_j^*}{x_i^*-x_j^*}dx=\int_{-1}^1\frac{p_{n+1}(x)}{(x-x_i^*)\left[p_{n+1}(x_i^*)\right]'}dx$$
+Is a set of Gauss Quadrature called the {\textit{\textbf{Gauss-Legendre Quadrature}}}, again, covered in much greater depth in Numerical analysis
+\section{Improper Integrals}
+\subsection{Concepts and Computation}
+\subsubsection{Definitions:}
+$$\forall{}f(x)\in[a,+\infty),\mbox{if }\forall{}A>a,\exists\int_a^Af(x)dx\mbox{ and }\exists{}C=\lim_{A\to+\infty}\int_a^Af(x)dx:\mbox{f(x) is integrable on }[a,+\infty)$$
+$$\forall{}f(x)\in[a,B),\mbox{if }\forall{}A\in(a,B),\exists\int_a^Af(x)dx\mbox{ and }\exists{}C=\lim_{A\to{}B}\int_a^Af(x)dx:\mbox{f(x) is integrable on }[a,B)$$
+Most properties of Proper Integrals carries to Improper Integrals, the proof for which are trivial.
+
+The existence of a Improper integral have no direct link with boundedness or limits of a function, this can be easily shown with cleverly constructed Piecewise Functions.
+
+Multiples of two Improper Integrable Function may not be Integrable, $f(x)=\dfrac{1}{\sqrt{x}}$ is an example.
+
+On $[0,+\infty)$, an example is:
+$$f(x)=\begin{cases}
+        2^{\lceil x\rceil}&x\in\left(k,k+\dfrac{1}{4^{\lceil x\rceil}}\right]\\[8pt]
+        0&x\notin\left(k,k+\dfrac{1}{4^{\lceil x\rceil}}\right]
+    \end{cases}$$
+\subsubsection{The Cauchy Principle Value}
+$$\lim_{A\to+\infty}\int_{-A}^Af(x)dx=\lim_{A\to\infty}[F(A)-F(-A)]\mbox{ is the Cauchy Principle Value, denoted as: (cpv)}\int_{-\infty}^{+\infty}f(x)dx$$
+
+Clearly, when (cpv)$\displaystyle\int_{-\infty}^{+\infty}f(x)dx$ exists, it is equal to $\displaystyle\int_{-\infty}^{+\infty}f(x)dx$\\
+Substituting $t=\dfrac{1}{x}$ into infinite range Improper Integrals, the Gauss-Legendre Quadrature can accurately approximate Improper Integrals as it doesn't take points on the boundaries.
+\subsection{Determining Convergence}
+\subsubsection{Convergence on a Infinite Domain}
+{\textbf{Cauchy Convergence Theorem}}
+$$\int_a^{+\infty}f(x)dx\mbox{ is convergent }\iff\forall{}\varepsilon>0,\exists{}A_0\geq{}a,\mbox{s.t. }\forall{}A,A'\geq{}A_0:\left|\int_A^{A'}f(x)dx\right|\le\varepsilon$$
+This follows from the Cauchy Convergence Theorem\\
+\textbf{Absolute Convergent}
+$$\forall{}A>a,\exists\int_a^Af(x)dx\mbox{ and }\exists{}C=\lim_{A\to+\infty}\int_a^A|f(x)|dx:f(x)\mbox{ is integrable on }[a,+\infty)$$
+If a function is Absolute Convergent, then it is convergent, this can be easily proved with the sandwich theorem using $|f(x)|$ and $-|f(x)|$
+Alternative proof with Cauchy Convergence Theorem:
+$$\forall{}\varepsilon>0,\exists{}A_0\geq{}a\mbox{ s.t. }\forall{}A,A'\geq{}A_0\mbox:\varepsilon>\int_A^{A'}|f(x)|dx\geq\left|\int_A^{A'}f(x)dx\right|$$
+Thus, according to the Cauchy Convergence Theorem, $f(x)$ is convergent
+\null\hfill$\square$
+
+{\textbf{Comparison Test}}
+$$\exists{}K\varphi(x)>0\mbox{ s.t. }K\varphi(x)\geq{}f(x)\geq-K\varphi(x)dx\mbox{ s.t. } \int_a^{+\infty}\varphi(x)dx\mbox{ converges}\implies\int_a^{+\infty}f(x)dx\mbox{ converges}$$
+This method can be extended to fraction form, the derivation and application of which are trivialy simple
+
+{\textbf{Cauchy Criterion}}\\
+Comparison test with $x^p$
+
+{\textbf{The Second Intermediate Value Theorem of Integration}}\\
+Let $f(x)\in[a,b]$ be integrable, $g(x)\in[a,b]$ be monotonic and continuous$\implies\exists{}\xi\in[a,b]$ s.t.
+$$\int_a^bf(x)g(x)dx=g(a)\int_a^{\xi}f(x)dx+g(b)\int_{\xi}^bf(x)dx$$
+\textbf{Proof1:} (This proof assumes $f(x)\in[a,b]$ to be continuous and $g'(x)\in[a,b]$)
+$$\mbox{let }F(x)=\int_a^xf(t)dt\implies\int_a^bf(x)g(x)dx=[F(x)g(x)]_a^b-\int_a^bF(x)g'(x)dx$$
+$$=F(b)g(b)-F(\xi)\int_a^bg(x)'dx=g(b)\int_a^bf(x)dx-[g(b)-g(a)]\int_a^{\xi}f(x)dx=g(a)\int_a^{\xi}f(x)dx+g(b)\int_{\xi}^bf(x)dx$$
+\textbf{Proof2:}
+$$I:=\int_a^bf(x)dx,F(t):=g(a)\int_a^tf(x)dx+g(b)\int_t^b f(x)dx$$
+Clearly: $F(a)=Ig(b),F(b)=Ig(a)$. Due to the continuity of $F(t)$:
+$$\int_a^bf(x)g(x)dx=g(\eta)\int_a^bf(x)dx=Ig(\eta)\mbox{ is clearly in the range between: }Ig(a)\mbox{ and }Ig(b)\implies\exists\xi\st F(\xi)=Ig(\eta)$$
+{\textbf{Abel Criterion}}
+$$\int_a^{+\infty}f(x)dx\mbox{ convergent and }g(x)\in[a,+\infty)\mbox{ bounded}\implies\int_a^{+\infty}f(x)g(x)dx\mbox{ convergent}$$
+{\textbf{Dirichlet Criterion}}
+$$F(A)=\int_a^{A}f(x)dx\mbox{ bounded on }[a,+\infty),\lim_{x\to+\infty}g(x)=0\mbox{ and $g(x)$ is monotonic}$$
+$$\implies\int_a^{+\infty}f(x)g(x)dx\mbox{ convergent}$$
+\null\hfill{Why does $g(x)$ have to be monotonic? Think about trigonometric $F(x)$ and $g(x)$}
+\subsubsection{Convergence of Unbounded Integrals}
+Use $t=\dfrac{1}{x}$ substitutions or simply adjust the definitions
+\section{Number Series}
+\subsection{Basic properties of Series}
+\textbf{Property 1:}
+$$\exists S\in\mathbb{R}\mbox{ s.t. }\lim_{n\to\infty}\sum_{k=1}^nx_n=S\implies\lim_{n\to\infty}x_n=0$$
+\textbf{Proof:}
+$$\lim_{n\to\infty}x_n=\lim_{n\to\infty}(S_n-S_{n-1})=\lim_{n\to\infty}S_n-\lim_{n\to\infty}S_{n-1}=0$$
+\textbf{Property 2:}
+$$\sum_{n=1}^{\infty}a_n=A\in\mathbb{R},\sum_{n=1}^{\infty}b_n=B\in\mathbb{R},\alpha,\beta\in\mathbb{R}\implies\sum_{n=1}^{\infty}(\alpha a_n+\beta b_n)=\alpha A+\beta B$$
+\textbf{Proof:}
+$$\sum_{n=1}^{\infty}(\alpha a_n+\beta b_n)=\lim_{n\to\infty}\sum_{k=1}^{n}\alpha a_n+\lim_{n\to\infty}\sum_{k=1}^{n}\beta b_n=\alpha\lim_{n\to\infty}\sum_{k=1}^{n}a_n+\beta\lim_{n\to\infty}\sum_{k=1}^{n}b_n=\alpha A+\beta B$$
+\textbf{Property 3:}
+$$\sum_{n=1}^{\infty}x_n=S\implies$$
+$$(x_1+x_2+\dots+x_{n_1})+(x_{n_1+1}+x_{n_1+2}+\dots+x_{n_2})+\dots+(x_{n_{k-1}+1}+x_{n_{k-1}+2}+\dots+x_{n_k})+\dots=S$$
+\textbf{Proof:}
+$$y_k:=(x_{n_{k-1}+1}+x_{n_{k-1}+2}+\dots+x_{n_k})\implies\sum_{k=1}^ny_n\mbox{ is a subsequence of }\sum_{k=1}^nx_n$$
+Thus, convergent series satisfies additive associativity, as an exercise, give an example for a bounded divergent series that converges to different values when associativity is applied in two different ways.
+\subsection{Upper and Lower Limits}
+\subsubsection{Definition and Properties}
+\textbf{Definition:} If for bounded sequence $\{x_n\}$, exists subsequence $\{x_{n_k}\}$ such that $\lim_{k\to\infty}x_{n_k}=\xi$, then call $\xi$ a limit point of $\{x_n\}$, $E:=\{\xi|\xi\mbox{ is a limit point of }\{x_n\}\}$, $H:=\mbox{sup}E,h:=\mbox{inf}E$\\
+\textbf{Theorem:} $H,h\in E$\\
+\textbf{Proof:}
+$$\forall n>0,\exists e_n\in E\st H-e_n<\frac{1}{2n}\mbox{ as }e_n\mbox{ is a limit point, }\exists x_{a_n}\in\{x_n\}\st e_n-x_{a_n}<\frac{1}{2n}$$
+$$\implies(H-e_n)+(e_n-x_{a_n})=H-x_{a_n}<\frac{1}{n}\implies H-\frac{1}{n}<x_{a_n}<H$$
+Thus, $x_{a_n}$ converges to $H\implies H\in E$\\
+\textbf{Definition:} $$\overline{\lim}_{n\to\infty}x_n:=H\mbox{ and }\underline{\lim}_{n\to\infty}x_n:=h$$\\
+\textbf{Theorem:}
+$$\{x_n\}\mbox{ converges}\iff\overline{\lim}_{n\to\infty}x_n=\underline{\lim}_{n\to\infty}x_n$$\\
+\textbf{Proof:} trivial\\
+\textbf{Definition:} For unbounded sequence $\{x_n\},+\infty\in E:=\forall G>0,\exists n\st x_n>G$\\
+\textbf{Theorem:}
+$$\overline{\lim}_{n\to\infty}x_n=H\iff$$
+$$(\forall\varepsilon>0,\exists N\in\mathbb{N^+}\st\forall n>N:x_n<H+\varepsilon)\land(\forall\varepsilon>0:\mbox{exist infinite elements of }\{x_n\}\st x_n>H-\varepsilon)$$
+\null\hfill{Prove as an exercise}\\
+\textbf{Theorem:} for any sequences $\{x_n\}$ and $\{y_n\}$, there is
+$$(1)\overline{\lim}_{n\to\infty}(x_n+y_n)\leq\overline{\lim}_{n\to\infty}x_n+\overline{\lim}_{n\to\infty}y_n\quad\underline{\lim}_{n\to\infty}(x_n+y_n)\geq\underline{\lim}_{n\to\infty}x_n+\underline{\lim}_{n\to\infty}y_n$$
+If $\lim\limits_{n\to\infty}x_n$ exists, then:
+$$(2)\overline{\lim}_{n\to\infty}(x_n+y_n)=\lim_{n\to\infty} x_n+\overline{\lim}_{n\to\infty}y_n\quad\underline{\lim}_{n\to\infty}(x_n+y_n)=\lim_{n\to\infty}x_n+\underline{\lim}_{n\to\infty}y_n$$
+\textbf{Proof:}
+\begin{equation}
+\begin{split}
+    (1)\,&\forall\varepsilon>0,\exists N\in\mathbb{N}^+\st\forall n>N:x_n<H_1+\varepsilon\land y_n<H_2+\varepsilon\implies x_n+y_n<H_1+H_2+2\varepsilon\\
+    &\implies\overline{\lim}_{n\to\infty}(x_n+y_n)\le H_1+H_2+2\varepsilon\implies\overline{\lim}_{n\to\infty}(x_n+y_n)\le H_1+H_2\\
+    (2)\,&\mbox{from (1): }\overline{\lim}_{n\to\infty}y_n=\overline{\lim}_{n\to\infty}[(x_n+y_n)-x_n]\le\overline{\lim}_{n\to\infty}(x_n+y_n)+\overline{\lim}_{n\to\infty}(-x_n)\\
+    &\implies\overline{\lim}_{n\to\infty}(x_n+y_n)\geq\lim_{n\to\infty}x_n+\overline{\lim}_{n\to\infty}y_n\mbox{, from (1): }\overline{\lim}_{n\to\infty}(x_n+y_n)\le\lim_{n\to\infty}x_n+\overline{\lim}_{n\to\infty}y_n\\
+    &\implies\overline{\lim}_{n\to\infty}(x_n+y_n)=\lim_{n\to\infty}x_n+\overline{\lim}_{n\to\infty}y_n
+\end{split}
+\end{equation}
+\textbf{Theorem:}
+\begin{equation}
+\begin{split}
+    (1)\,&x_n\geq0,y_n\geq0\implies\overline{\lim}_{n\to\infty}(x_ny_n)\le\overline{\lim}_{n\to\infty}x_n\cdot\overline{\lim}_{n\to\infty}y_n,\quad\underline{\lim}_{n\to\infty}(x_ny_n)\geq\underline{\lim}_{n\to\infty}x_n\cdot\underline{\lim}_{n\to\infty}y_n\\
+    (2)\,&\lim_{n\to\infty}x_n=x\in\mathbb{R}^+\implies\overline{\lim}_{n\to\infty}(x_ny_n)=\lim_{n\to\infty}x_n\cdot\overline{\lim}_{n\to\infty}y_n,\quad\underline{\lim}_{n\to\infty}(x_ny_n)=\lim_{n\to\infty}x_n\cdot\underline{\lim}_{n\to\infty}y_n
+\end{split}
+\end{equation}
+\textbf{Proof:}
+\begin{equation}
+\begin{split}
+    (1)\,&\forall\varepsilon>0,\exists N\in\mathbb{N}^+\st\forall n>N:x_n<H_1+\varepsilon,y_n<H_2+\varepsilon\implies x_ny_n\le(H_1+\varepsilon)(H_2+\varepsilon)\\
+    &=H_1H_2+\varepsilon(H_1+H_2)+\varepsilon^2\mbox{, as }\varepsilon\mbox{ can be arbitrarily small: }x_ny_n\le\overline{\lim}_{n\to\infty}x_n\cdot\overline{\lim}_{n\to\infty}y_n\\
+    (2)\,&\forall\varepsilon\in(0,x),\exists N_1\in\mathbb{N}^+\st\forall n>N_1:0<x-\varepsilon<x<x+\varepsilon\\
+    &H_2:=\overline{\lim}_{n\to\infty}y_n\implies\exists N_2\in\mathbb{N}^+\mbox{ s.t. }\forall n>N_2:y_n<H_2+\varepsilon\\
+    &N:=\max\{N_1,N_2\}\implies\forall n>N:x_ny_n<\max\{(x-\varepsilon)(H_2+\varepsilon),(x+\varepsilon)(H_2+\varepsilon)\}\\
+    &\mbox{as }\varepsilon\mbox{ can be arbitrarily small: }\overline{\lim}_{n\to\infty}(x_ny_n)\le x\cdot H_2=\lim_{n\to\infty}x_n\cdot\overline{\lim}_{n\to\infty}y_n\\
+    &\implies\overline{\lim}_{n\to\infty}y_n=\overline{\lim}_{n\to\infty}\left[(x_ny_n)\cdot\frac{1}{x_n}\right]\le\overline{\lim}_{n\to\infty}(x_ny_n)\cdot\lim_{n\to\infty}\frac{1}{x_n}\\
+    &\implies\overline{\lim}_{n\to\infty}(x_ny_n)\geq\lim_{n\to\infty}x_n\cdot\overline{\lim}_{n\to\infty}y_n\implies\overline{\lim}_{n\to\infty}(x_ny_n)=\lim_{n\to\infty}x_n\cdot\overline{\lim}_{n\to\infty}y_n
+\end{split}
+\end{equation}
+\subsubsection{An alternative definition}
+Let $x_n$ be a bounded sequence on $\mathbb{R},\quad a_n:=\inf\limits_{k>n}\{x_k\},\quad b_n:=\sup\limits_{k>n}\{x_k\}$\\
+It is easy to see that the above sequences are monotonic and bounded by each other, thus convergent.\\
+$H':=\lim\limits_{n\to\infty}\sup\limits_{k>n}\{x_n\},\quad h':=\lim\limits_{n\to\infty}\inf\limits_{k>n}\{x_n\}$\\
+\textbf{Theorem: }$H'=H,h'=h$\\
+\textbf{Proof:} For any limit point $\xi$, let $\lim\limits_{k\to\infty}x_{n_k}=\xi\implies a_{n_k-1}\le x_{n_k}\le b_{n_k-1},\quad$let $\varepsilon_k=\dfrac{1}{k}$\\
+For $\varepsilon_1=1$, as $b_1=\sup\limits_{i>1}\{x_i\},\exists n_1\st b_1-1<x_{n_1}\le b_1$\\
+For $\varepsilon_2=\dfrac{1}{2}$, as $b_{n_1}=\sup\limits_{i>n_1}\{x_i\},\exists n_2>n_1\st b_{n_1}-\dfrac{1}{2}<x_{n_2}\le b_{n-1}$\\
+$\dots$\\
+For $\varepsilon_{k+1}=\dfrac{1}{k+1}$, as $b_{n_k}=\sup\limits_{i>n_k}\{x_i\},\exists n_{k+1}>n_k:b_{n_k}-\dfrac{1}{k+1}<x_{n_{k+1}}\le b_{n_k}$\\
+Thus, $H'=H$, similarly, $h'=h$\\
+The infinite case for the above definition is rather trivial.
+\subsection{Positive Series}
+Any series where $x_n$ is positive or equivalently, $S_n$ monotonically increases is a positive series.\\
+\textbf{Theorem:} $S_n$ converges$\iff$exists an upper bound to any partial series (partial series: any series that contains not all of elements in $x_n$)
+\subsubsection{Comparison test:}
+\textbf{Theorem:}
+$$\mbox{Let }\sum_{n=1}^\infty x_n,\sum_{n=1}^\infty y_n \mbox{ be two positive series, if there exists }A\in\mathbb{R}^+\mbox{ s.t. }\forall n\in\mathbb{N}^+:x_n\le Ay_n\mbox{ then:}$$
+$$\sum_{n=1}^\infty y_n\mbox{ converges }\implies\sum_{n=1}^\infty x_n\mbox{ converges.}$$
+\null\hfill(Prove as an exercise)\\
+\textbf{Theorem:}
+$$\mbox{Let }\sum_{n=1}^\infty x_n,\sum_{n=1}^\infty y_n \mbox{ be two positive series, and }\lim_{n\to\infty}\frac{x_n}{y_n}=l\in\mathbb{R}^{\geq0}\mbox{ then:}$$
+$$\begin{cases}
+    \sum\limits_{n=1}^\infty y_n\mbox{ converges}\implies\sum\limits_{n=1}^\infty x_n\mbox{ converges}&l=0\\
+    \sum\limits_{n=1}^\infty y_n\mbox{ converges}\iff\sum\limits_{n=1}^\infty x_n\mbox{ converges}&l\in\mathbb{R}^+\\
+    \sum\limits_{n=1}^\infty x_n\mbox{ converges}\implies\sum\limits_{n=1}^\infty y_n\mbox{ converges}&l=+\infty
+\end{cases}$$
+\null\hfill{(Prove as an exercise)}
+\subsubsection{Cauchy Test}
+$$\mbox{Average ratio between terms: }\sqrt[n]{\frac{x_1}{1}\cdot\frac{x_2}{x_1}\cdot\dots\cdot\frac{x_n}{x_{n-1}}}=\sqrt[n]{x_n}$$
+\textbf{Theorem:}
+$$\mbox{let }\sum_{n=1}^\infty x_n\mbox{ be a positive series, }r:=\overline{\lim}_{n\to\infty}\sqrt[n]{x_n}\mbox{ then:}$$
+$$\begin{cases}
+    \sum\limits_{n=1}^\infty x_n\mbox{ converges}&r<1\\
+    \sum\limits_{n=1}^\infty x_n\mbox{ is undetermined}&r=1\\
+    \sum\limits_{n=1}^\infty x_n\mbox{ diverges}&r>1
+\end{cases}$$
+\textbf{Proof:}
+$$\begin{cases}
+    \forall q\in(r,1),\exists N\in\mathbb{N}^+\mbox{ s.t. }\forall n>N:\sqrt[n]{x_n}<q\implies x_n<q^n&r<1\\
+    \mbox{See: }\sum\limits_{n=1}^\infty\dfrac{1}{n},\sum\limits_{n=1}^\infty\dfrac{1}{n^2}&r=1\\
+    r>1\implies\mbox{ exists infinite }x_n\mbox{ s.t. }\sqrt[n]{x_n}>1&r>1
+\end{cases}$$
+\subsubsection{D'Alembert Test}
+$$\begin{cases}
+    \sum\limits_{n=1}^\infty x_n\mbox{ converges}&\overline{\lim}_{n\to\infty}\dfrac{x_{n+1}}{x_n}=\overline{r}<1\\
+    \sum\limits_{n=1}^\infty x_n\mbox{ diverges}&\underline{\lim}_{n\to\infty}\dfrac{x_{n+1}}{x_n}=\underline{r}>1\\
+    \mbox{Undetermined}&\mbox{Otherwise}
+\end{cases}$$
+\textbf{Theorem:}
+$$\underline{\lim}_{n\to\infty}\frac{x_{n+1}}{x_n}\le\underline{\lim}_{n\to\infty}\sqrt[n]{x_n}\le\overline{\lim}_{n\to\infty}\sqrt[n]{x_n}\le\overline{\lim}_{n\to\infty}\frac{x_{n+1}}{x_n}$$
+\textbf{Proof for D'Alembert Test and the above theorem:}
+$$\forall\varepsilon>0,\exists N\in\mathbb{N}^+\st\forall n>N:\frac{x_{n+1}}{x_n}<\overline{r}+\varepsilon\implies x_n<(\overline{r}+\varepsilon)^{n-N-1}\cdot x_{N+1}$$
+$$\overline{\lim}_{n\to\infty}\sqrt[n]{x_n}\le\overline{\lim}_{n\to\infty}\sqrt[n]{(\overline{r}+\varepsilon)^{n-N-1}\cdot x_{N+1}}=\overline{r}+\varepsilon\implies\overline{\lim}_{n\to\infty}\sqrt[n]{x_n}\le\overline{r}$$
+\null\hfill{The proof on the other end is similar}
+\subsubsection{Raabe Test}
+$$\mbox{Let }\sum_{n=1}^\infty x_n\mbox{ be a positive series where }\lim_{n\to\infty}\frac{x_{n+1}}{x_n}=1,\quad r:=\lim_{n\to\infty}n\left(\frac{x_n}{x_{n+1}}-1\right)\mbox{ then:}$$
+$$\begin{cases}
+    \sum\limits_{n=1}^\infty x_n \mbox{ diverges}&r<1\\
+    \sum\limits_{n=1}^\infty x_n \mbox{ is undetermined}&r=1\\
+    \sum\limits_{n=1}^\infty x_n \mbox{ converges}&r>1\\
+\end{cases}$$
+\textbf{Proof:}
+$$\begin{cases}
+    \exists N\in\mathbb{N}^+\st\forall n>N:n\left(\dfrac{x_n}{x_{n+1}}-1\right)<1\implies nx_n<(n+1)x_{n+1}\\
+    \implies\forall n>N,nx_n\mbox{ is monotonically increasing}\implies nx_n>\alpha\implies x_n>\dfrac{\alpha}{n}&r<1\\
+    \mbox{See: }\sum\limits_{n=2}^\infty\dfrac{1}{n\ln^qn}\mbox{ it is convergent when $q>1$ and divergent when $q\le1$}&r=1\\
+    \mbox{let }r>s>t>1,f(x):=1+sx-(1+x)^t\mbox{ then }f(0)=0\mbox{ and }f'(0)=s-t>0\\
+    \implies\exists\delta\mbox{ s.t. }\forall x\in(0,\delta):1+sx>(1+x)^t\implies\exists N\in\mathbb{N}^+\mbox{ s.t. }\forall n>N:\dfrac{1}{n}\in(0,\delta)\\
+    \lim\limits_{n\to\infty}n\left(\dfrac{x_n}{x_{n+1}}-1\right)=r>s>t\implies\forall n>N:\dfrac{x_n}{x_{n+1}}>1+\dfrac{s}{n}>\left(1+\dfrac{1}{n}\right)^t=\dfrac{(n+1)^t}{n^t}\\
+    \implies\forall n>N,n^tx_n\mbox{ is monotonically decreasing}\implies\exists A\in\mathbb{R}^{>0}\mbox{ s.t. }n^tx_n\le A\implies x_n\le\dfrac{A}{n^t}&r>1
+\end{cases}$$
+It is possible to infinitely construct more accurate tests using the fact that $\ln x$ diverges slower than any polynomials at $x=0$, thus $\ln(\ln x)$ diverges slower than $\ln x$ etc.
+$$\mbox{Therefore, we can deduce that: }\lim_{n\to\infty}\ln n\left[n\left(\frac{x_n}{x_{n+1}}-1\right)-1\right]\mbox{ is the next test}$$
+$$\mbox{It is possible to proof that: }\lim_{n\to\infty}\underbrace{\ln\dots\ln}_{k-1}n\left[\underbrace{\ln\dots\ln}_{k-2}n\left[\dots\ln n\left[\left(n\frac{x_n}{x_{n+1}}-1\right)-1\right]\dots\right]\right]\mbox{ is the }k^{\mbox{th}}\mbox{test}$$
+\null\hfill{Proof missing}
+\subsubsection{Integral Test}
+Let $f(x)\geq0$ be a function on $[a,+\infty)$ integrable on any $(a,A]$\\
+Let $\{a_n\}$ be a monotonically increasing sequence such that: $\lim\limits_{n\to\infty}a_n=\infty,a=a_1$, let $u_n=\displaystyle\int_{a_n}^{a_{n+1}}f(x)dx$\\
+\textbf{Theorem:}
+\begin{equation}
+\begin{split}
+    (1)\,&\int_a^{+\infty}f(x)dx=\sum_{n=1}^\infty u_n=\sum_{n=1}^\infty\int_{a_n}^{a_{n+1}}f(x)dx\\
+    (2)\,&\mbox{let }a_n=n,f(x)\searrow\implies\int_a^{+\infty}f(x)dx\mbox{ converges}\iff\sum_{n=N}^\infty f(n)(N=\lceil a\rceil)\mbox{ converges}
+\end{split}
+\end{equation}
+\textbf{Proof:}
+\begin{equation}
+\begin{split}
+    (1)\,&\mbox{Let }\sum_{k=1}^nu_k=S_n,a_n\le A\le a_{n+1}\implies S_{n-1}\le\int_a^Af(x)dx\le S_n\mbox{ thus clearly}\\
+    (2)\,&f(n+1)\le u_n=\int_n^{n+1}f(x)dx\le f(n)\mbox{ thus clearly}
+\end{split}
+\end{equation}
+\subsection{Non-Positive Series}
+\textbf{Theorem: Cauchy Convergence Principle of Series}
+$$\sum_{n=1}^\infty x_n\mbox{ is convergent}\iff\forall\varepsilon>0,\exists N\in\mathbb{N}^+\mbox{ s.t. }\forall m>n>N:\left|\sum_{k=n+1}^mx_k\right|<\varepsilon$$
+\null\hfill{if we look at series as a sequence, the theorem becomes trivial}
+\subsubsection{Leibniz Series}
+$$\mbox{Alternating Series}:=\sum_{n=1}^\infty x_n=\sum_{n=1}^\infty (-1)^{n+1}u_n(u_n>0)$$
+$$\mbox{Leibniz Series}:=\mbox{Any alternating series where }(u_n\searrow)\land(\lim_{n\to\infty}u_n=0)$$
+\textbf{Theorem: The Leibniz Test}\\
+All Leibniz Series Converge\\
+\textbf{Proof:}
+$$|x_{n+1}+x_{n+2}+\dots+x_{n+p}|=|u_{n+1}-u_{n+2}+\dots+(-1)^{p+1}u_{n+p}|$$
+$p$ is odd:
+$$u_{n+1}-u_{n+2}+\dots+(-1)^{p+1}u_{n+p}=
+\begin{cases}
+    (u_{n+1}-u_{n+2})+(u_{n+3}-u_{n+4})\dots+u_{n+p}>0\\
+    u_{n+1}-(u_{n+2}-u_{n+3})-\dots-(u_{n+p-1}-u_{n+p})\le u_{n+1}
+\end{cases}$$
+$p$ is even:
+$$u_{n+1}-u_{n+2}+\dots+(-1)^{p+1}u_{n+p}=
+\begin{cases}
+    (u_{n+1}-u_{n+2})+(u_{n+3}-u_{n+4})\dots+(u_{n+p-1}-u_{n+p})\geq0\\
+    u_{n+1}-(u_{n+2}-u_{n+3})-\dots-u_{n+p}\le u_{n+1}
+\end{cases}$$
+$$\implies\forall\varepsilon>0,\exists N\in\mathbb{N}^+\mbox{ s.t. }\forall n>N:\left|\sum_{k=n+1}^mx_k\right|<u_{n+1}<\varepsilon$$
+\textbf{Properties of Leibniz Series:}
+$$(1)\quad0\le\sum_{n=1}^\infty x_n\le u_1$$
+$$(2)\quad|r_n|=\left|\sum_{k=n+1}^mx_k\right|\le u_{n+1}$$
+\textbf{Example question:}
+$$\mbox{Prove that: }\sum_{n=1}^\infty\sin(\sqrt{n^2+1}\pi)\mbox{ is convergent}$$
+\textbf{Proof:}
+$$\sin(\sqrt{n^2+1}\pi)=(-1)^n\sin\left((\sqrt{n^2+1}-n)\pi\right)=(-1)^n\sin\frac{\pi}{\sqrt{n^2+1}+n}\mbox{ thus a Leibniz series}$$
+\subsubsection{Abel and Dirichlet Test}
+\textbf{Theorem: Abel Transformation}
+$$\mbox{Let }\{a_n\},\{b_n\}\mbox{ be sequences, }B_k=\sum_{i=1}^kb_i\mbox{ then:}$$
+$$\sum_{k=1}^pa_kb_k=a_pB_p-\sum_{k=1}^{p-1}(a_{k+1}-a_k)B_k$$
+\textbf{Proof:}
+$$\sum_{k=1}^pa_kb_k=a_1B_1+\sum_{k=2}^pa_k(B_k-B_{k-1})=a_1B_1+\sum_{k=2}^pa_kB_k-\sum_{k=2}^pa_kB_{k-1}=\sum_{k=1}^pa_kB_k-\sum_{k=2}^pa_kB_{k-1}$$
+$$=a_pB_p+\sum_{k=1}^{p-1}a_kB_k-\sum_{k=2}^pa_kB_{k-1}=a_pB_p+\sum_{k=1}^{p-1}a_kB_k-\sum_{k=1}^{p-1}a_{k+1}B_k=a_pB_p-\sum_{k=1}^{p-1}(a_{k+1}-a_k)B_k$$
+In fact, Abel transformation is the discrete form of integration by parts. $G(x):=\displaystyle\int_a^xg(t)\mbox{d}t$
+$$\implies\int_a^bf(x)g(x)dx=f(b)G(b)-\int_a^bG(x)\mbox{d}f(x)$$
+\textbf{Theorem: Abel's Lemma}\\
+Let $\{a_k\}$ be monotonic, $\{B_k\}$ be bounded by $M$, then:
+$$\left|\sum_{k=1}^pa_kb_k\right|\le M(|a_1|+2|a_p|)$$
+\textbf{Proof:}
+From the Abel transform, we have: 
+$$\left|\sum_{k=1}^pa_kb_k\right|\le|a_pB_p|+\sum_{k=1}^{p-1}|a_{k+1}-a_k||B_k|\le M\left(|a_p|+\sum_{k=1}^{p-1}|a_{k+1}-a_k|\right)=M\left(|a_p|+\left|\sum_{k=1}^{p-1}(a_{k+1}-a_k)\right|\right)$$
+$$=M(|a_p|+|a_p-a_1|)\le M(|a_1|+2|a_p|)$$
+\null\hfill{Note: The monotonicity does not have to be strict}\\
+\textbf{Theorem: The Abel test and the Dirichlet test}
+If one of the following stands, then $\sum\limits_{n=1}^\infty a_nb_n$ converges:
+\begin{enumerate}
+    \item (The Abel Test) $\{a_n\}\mbox{ monotonically converges}\land\sum\limits_{n=1}^\infty b_n\mbox{ converges}$
+    \item (The Dirichlet Test) $\{a_n\}\mbox{ monotonically converges to 0}\land\left\{\sum\limits_{i=1}^nb_i\right\}\mbox{is bounded}$
+\end{enumerate}
+\textbf{Proof:}
+\null\hfill{Prove 1. using Abel transformation as an exercise}
+\begin{equation}
+\begin{split}
+    2.\,&\lim_{n\to\infty}a_n=0\implies\forall\varepsilon>0,\exists N\mbox{ s.t. }\forall n>N:|a_n|<\varepsilon\\
+    &\mbox{ Let }\left|\sum_{i=1}^nb_i\right|\le M,B_k:=\sum_{i=n+1}^{n+k}b_i\implies|B_k|=\left|\sum_{i=1}^{n+k}b_i-\sum_{i=1}^nb_i\right|\le2M\\
+    &\implies\left|\sum_{k=n+1}^{n+p}a_kb_k\right|\le2M(|a_{n+1}|+2|a_{n+p}|)<6M\varepsilon\\
+\end{split}
+\end{equation}
+\textbf{Notes:}
+\begin{itemize}
+    \item For any Leibniz Series, $u_n$ monotonically converges, $\sum(-1)^n$ is bounded, thus the Leibniz test is a special case of the Dirichlet test
+    \item For any series that satisfy the Abel test, let $\lim\limits_{n\to\infty}a_n=a\implies\lim\limits_{n\to\infty}(a_n-a)=0$ and as $\sum\limits_{n=1}^\infty b_n$ converges, $\left\{\sum\limits_{i=1}^nb_i\right\}$ must be bounded. Thus, according to the Dirichlet Test, $\sum\limits_{n=1}^\infty(a_n-a)b_n$ converges$\implies\sum\limits_{n=1}^\infty a_nb_n$ converges. Again, the Abel Test is also a the Dirichlet test in disguise.
+\end{itemize}
+\textbf{Example question:}\\
+let $\{a_n\}$ monotonically converge to 0, prove that for all
+$x\in\mathbb{R}:\sum\limits_{n=1}^\infty a_n\sin nx$ converges\\
+\textbf{Proof:}
+$$\forall x\neq2k\pi,2\sin\frac{x}{2}\cdot\sum_{k=1}^n\sin kx=\cos\frac{x}{2}-\cos\frac{2n+1}{2}x\implies\forall n\in\mathbb{N}^+:\left|\sum_{k=1}^n\sin kx\right|\le\frac{1}{\left|\sin\dfrac{x}{2}\right|}\mbox{ (Then trivial)}$$
+\subsubsection{Absolute and Conditional Convergence}
+If $\sum\limits_{n=1}^\infty |x_n|$ is convergent, $\sum\limits_{n=1}^\infty x_n$ is absolute convergent. If $\sum\limits_{n=1}^\infty x_n$ is convergent, but $\sum\limits_{n=1}^\infty |x_n|$ is not convergent, $\sum\limits_{n=1}^\infty x_n$ is conditional convergent. Note that:
+$$-\sum\limits_{k=n+1}^m|x_k|\le\sum\limits_{k=n+1}^mx_k\le\sum\limits_{k=n+1}^m|x_k|$$
+Thus if a series is absolute convergent, it is convergent.\\
+\textbf{Example Question:}\\
+Prove that $\sum\limits_{n=1}^\infty\dfrac{\sin nx}{n^p}(x\in(0,\pi),p\in(0,1])$ is conditional convergent.\\
+\textbf{Proof:}
+The convergence is proved in the last exercise, now we provide a proof for its absolute divergence:
+$$\dfrac{|\sin nx|}{n^p}\geq\dfrac{\sin^2nx}{n^p}=\dfrac{1}{2n^p}-\dfrac{\cos2nx}{2n^p}$$
+$\sum\limits_{n-1}^\infty\dfrac{1}{2n^p}$ is known to be divergent and $\sum\limits_{n=1}^\infty\dfrac{\cos2nx}{2n^p}$ is convergent according to the Dirichlet test. Thus, $\dfrac{\sin nx}{n^p}$ is absolute divergent\\
+\textbf{Positive subseries and Negative subseries:}
+$$x_n^+:=\frac{|x_n|+x_n}{2}=\begin{cases}
+   x_n&x_n>0\\
+   0&x_n\le0
+\end{cases},\quad x_n^-:=\frac{|x_n|-x_n}{2}=\begin{cases}
+   0&x_n>0\\
+   -x_n&x_n\le0
+\end{cases}$$
+$$\implies x_n^+-x_n^-=x_n,\quad x_n^++x_n^-=|x_n|,\quad\sum_{n=1}^\infty x_n^+\mbox{ and }\sum_{n=1}^\infty x_n^-\mbox{ are both positive series}$$
+\textbf{Theorem:}
+\begin{equation}
+\begin{split}
+    (1)\,&\mbox{If }\sum_{n=1}^\infty x_n\mbox{ is absolute convergent, then }\sum_{n=1}^\infty x_n^+\mbox{ and }\sum_{n=1}^\infty x_n^-\mbox{ are convergent}\\
+    (2)\,&\mbox{If }\sum_{n=1}^\infty x_n\mbox{ is conditional convergent, then }\sum_{n=1}^\infty x_n^+\mbox{ and }\sum_{n=1}^\infty x_n^-\mbox{ diverge to }+\infty
+\end{split}
+\end{equation}
+\textbf{Proof:}
+\begin{equation}
+\begin{split}
+    (1)\,&0\le x_n^-,x_n^+\le|x_n|\quad\mbox{(Then trivial)}\\
+    (2)\,&\mbox{Assume }\sum_{n=1}^\infty x_n^+\mbox{ to be convergent, then }\sum_{n=1}^\infty x_n^-=\sum_{n=1}^\infty x_n^+-\sum_{n=1}^\infty x_n\implies \sum_{n=1}^\infty x_n^-\mbox{ is also convergent}\\
+    &\implies \sum_{n=1}^\infty|x_n|=\sum_{n=1}^\infty x_n^++\sum_{n=1}^\infty x_n^-\mbox{ is convergent, which is a contradiction}
+\end{split}
+\end{equation}
+\subsubsection{Commutativity of Addition}
+Commutativity does not always stand within a series.\\
+\textbf{Exercise:} Prove that $\sum\limits_{n=1}^\infty\dfrac{(-1)^{n+1}}{n}=\ln2$\\
+\textbf{Example where commutativity does not stand:}
+$$S_n:=\sum_{n+1}^\infty x_n=\sum_{n=1}^\infty \frac{(-1)^{n+1}}{n}$$
+$$S_n':=\sum_{n=1}^\infty x_n'=1-
+\frac{1}{2}-\frac{1}{4}+\frac{1}{3}-\frac{1}{6}-\frac{1}{8}+\dots+\frac{1}{2k-1}-\frac{1}{4k-2}-\frac{1}{4k}+\dots$$
+$$\implies S_{3n}'=\sum_{k=1}^n\left(\frac{1}{2k-1}-\frac{1}{4k-2}-\frac{1}{4k}\right)=\sum_{k=1}^n\left(\frac{1}{4k-2}-\frac{1}{4k}\right)=\frac{1}{2}\sum_{k=1}^n\left(\frac{1}{2k-1}-\frac{1}{2k}\right)=\frac{1}{2}S_{2n}$$
+$$\implies\lim_{n\to\infty}S_{3n}'=\frac{1}{2}\lim_{n\to\infty}S_{2n}=\frac{\ln2}{2},\quad\mbox{as }S_{3n-1}'=S_{3n}'+\frac{1}{4n},\quad S_{3n+1}'=S_{3n}'+\frac{1}{2n+1}\implies S_n'=\frac{\ln2}{2}$$
+\textbf{Theorem:}
+If a series absolutely converges, then changing its order wouldn't affect its absolute convergence or change its limit.\\
+\textbf{Proof:}
+Let $x_n'$ denote a reordering of $x_n$
+\begin{equation}
+\begin{split}
+    (1)\,&\mbox{Let }x_n>0\implies\forall\{x_n'\},\forall n\in\mathbb{N}^+:\sum_{k=1}^nx_k'\le\sum_{n=1}^\infty x_n\implies\sum_{n=1}^\infty x_n'\le\sum_{n=1}^\infty x_n\\
+    &x_n\mbox{ can be seen as a reordering of }x_n'\implies\sum_{n=1}^\infty x_n\le\sum_{n=1}^\infty x_n'\implies\sum_{n=1}^\infty x_n'=\sum_{n=1}^\infty x_n\\
+    (2)\,&\forall\sum_{n=1}^\infty x_n\mbox{ that absolutely converges: }\sum_{n=1}^\infty x_n^+,\sum_{n=1}^\infty x_n^-\mbox{ converge}\\
+    &\forall x_n':x_n'^+\mbox{ and }x_n'^-\mbox{ are respective reorders of }x_n^+\mbox{ and }x_n^-\implies\sum_{n=1}^\infty x_n'^+=\sum_{n=1}^\infty x_n^+,\quad\sum_{n=1}^\infty x_n'^-=\sum_{n=1}^\infty x_n^-\\
+    &\sum_{n=1}^\infty x_n'^++\sum_{n=1}^\infty x_n'^-=\lim_{n\to\infty}\sum_{k=1}^n\left(x_n'^++x_n'^-\right)=\lim_{n\to\infty}\sum_{k=1}^n|x_n'|=\sum_{n=1}^\infty|x_n'|\\
+    &\implies\sum_{n=1}^\infty x_n'=\sum_{n=1}^\infty x_n'^+-\sum_{n=1}^\infty x_n'^-=\sum_{n=1}^\infty x_n^+-\sum_{n=1}^\infty x_n^-=\sum_{n=1}^\infty x_n\\
+\end{split}
+\end{equation}
+\textbf{The Riemann Reordering theorem:}
+$$\sum_{n=1}^\infty\mbox{ is conditional convergent}\implies\forall a\in\mathbb{R}:\exists\{x_n'\}\mbox{ s.t. }\sum_{n=1}^\infty x_n'=a$$
+\textbf{Proof:}
+$$\mbox{It is known that: }\sum_{n=1}^\infty x_n^+,\sum_{n=1}^\infty x_n^-=+\infty\mbox{ and }\lim_{n\to\infty}x_n^+=\lim_{n\to\infty}x_n^-=0$$
+$$\mbox{Let }N_1\mbox{ be the smallest positive integer}\st\sum_{k=1}^{N_1}x_k^+>a$$
+$$\mbox{Let }M_1\mbox{ be the smallest positive integer such that }\sum_{k=1}^{N_1}x_k^+-\sum_{k=1}^{M_1}x_k^-<a$$
+$$\sum_{k=1}^{N_1}x_k^++\sum_{k=1}^{M_1}x_k^-+\sum_{k=N_1+1}^{N_1+N_2}x_k^+>a$$
+$$\dots\dots$$
+$$\mbox{It is not hard to see that the above series converges to }a$$
+\null\hfill{Exercise: Prove for the case of $a=\infty$}
+\subsubsection{Multiplication of Series}
+\textbf{The Cauchy Product} of $\sum\limits_{n=1}^\infty a_n$ and $\sum\limits_{n=1}^\infty b_n$ infinite series are defined as:
+$$\sum_{n=1}^\infty c_n:=\sum_{n=1}^\infty\left(\sum_{i+j=n+1}a_ib_j\right)$$
+\textbf{The Square Arrangement Product} of $\sum\limits_{n=1}^\infty a_n$ and $\sum\limits_{n=1}^\infty b_n$ infinite series are defined as:
+$$\sum_{n=1}^\infty d_n:=\sum_{n=1}^\infty\left(\sum_{i,j\le n}a_ib_j-\sum_{i,j\le n-1}a_ib_j\right)=\sum_{n=1}^\infty\left(\sum_{i<n}a_ib_n+\sum_{j<n}a_nb_j+a_nb_n\right)$$
+Clearly: $\sum\limits_{k=1}^nd_n=\left(\sum\limits_{k=1}^na_k\right)\left(\sum\limits_{k=1}^nb_k\right)$. Thus, if $\sum\limits_{n=1}^\infty a_n,\sum\limits_{n=1}^\infty b_n$ are convergent, then $\sum\limits_{n=1}^\infty d_n=\left(\sum\limits_{n=1}^\infty a_n\right)\left(\sum\limits_{n=1}^\infty b_n\right)$\\
+\textbf{Statement:}
+$$\mbox{Conditional Convergence of }\sum_{n=1}^\infty a_n\mbox{ and }\sum_{n=1}^\infty b_n\mbox{ do not imply the Convergence of }\sum_{n=1}^\infty c_n$$
+\textbf{Example:}
+$$a_n=b_n:=\frac{(-1)^{n+1}}{\sqrt{n}}$$
+$a_n$ and $b_n$ are Leibniz Series, thus both converge, their conditional convergence is hence trivially true
+$$|c_n|=\left|(-1)^{n+1}\sum_{i+j=n+1}\frac{1}{\sqrt{ij}}\right|=\left|\sum_{i+j=n+1}\frac{1}{\sqrt{ij}}\right|\geq\left|\sum_{i+j=n+1}\frac{2}{i+j}\right|=\frac{2n}{n+1}$$
+\textbf{Theorem:}
+$$\sum_{n=1}^\infty a_n,\sum_{n=1}^\infty b_n\mbox{ converge absolutely}\implies\forall\{(a_ib_j)'\},\sum (a_ib_j)'\mbox{ absolutely converges}$$ 
+$$\mbox{with its limit being: }\left(\sum_{n=1}^\infty a_n\right)\left(\sum_{n=1}^\infty b_n\right)$$
+\textbf{Proof:}
+$$\forall\{(a_ib_j)'\}=\{a_{i_k}b_{j_k}\},\quad\forall n,N_n:=\max_{a\le k\le n}\{i_k,j_k\}\implies\sum_{k=1}^n|a_{j_k}b_{j_k}|\le\sum_{i=1}^{N_n}|a_i|\cdot\sum_{j=1}^{N_n}|b_j|\le\sum_{n=1}^\infty|a_n|\cdot\sum_{n=1}^\infty|b_n|$$
+$$d_n\mbox{ can be seen as a series of a reordering of }a_ib_j\mbox{, thus: }\sum_{k=1}^\infty|a_{j_k}b_{j_k}|=d_n$$
+\textbf{Additivity of exponential powers}
+$$\left(\sum_{n=1}^\infty\frac{x^n}{n!}\right)\left(\sum_{n=1}^\infty\frac{y^n}{n!}\right)=\sum_{n=1}^\infty\left(\sum_{k=0}^n\frac{x^ky^{n-k}}{k!(n-k)!}\right)=\sum_{n=1}^\infty\left(\sum_{k=1}^n\frac{\begin{pmatrix}
+n\\
+k
+\end{pmatrix}x^ky^{n-k}}{n!}\right)=\sum_{n=1}^\infty\frac{(x+y)^n}{n!}$$
+\textbf{Corollary:}
+$$\forall m,n\in\N^+:x_{m,n}>0\land\sum_{m=1}^\infty\sum_{n=1}^\infty x_{m,n}=A\implies\sum_{m,n}x_{m,n}=A$$
+\textbf{Proof:}
+$$A_j:=\sum\limits_{k=1}^\infty x_{j,k}\implies\sum_{j=1}^\infty A_j=A\iff\forall\varepsilon,\exists M\st\forall m>M:\sum_{j=1}^mA_j>A-\frac{\varepsilon}{2}$$
+$$\forall1\le j\le m,\exists N_j\st\forall n>N_j:\sum_{k=1}^n a_{j,k}>A_j-\frac{\varepsilon}{2(M+1)},N:=\max\{N_j\}\implies$$
+$$\sum_{j=1}^{M+1}\sum_{k=1}^{N+1}a_{j,k}>\sum_{j=1}^{M+1}\left(A_j-\frac{\varepsilon}{2(M+1)}\right)>A-\frac{\varepsilon}{2}-(M+1)\cdot\frac{\varepsilon}{2(M+1)}=A-\varepsilon$$
+$$L:=\max\{M,N\}\implies\sum_{j,k\le L+1}x_{j,k}>A-\varepsilon$$
+\subsection{Infinite Products}
+$$\mbox{If }\forall p_i\in\{p_n\},p_i>0\mbox{, then }P_n:=\prod_{k=1}^np_k$$
+$$\mbox{If }\lim_{n\to\infty}P_n=P\in\R\symbol{92}\{0\}\mbox{ then }P_n\mbox{ is convergent to }P$$
+\textbf{Theorem:}
+$$P_n\mbox{ converges}\implies\begin{cases}
+    (1)\lim\limits_{n\to\infty}p_n=1\\
+    (2)\lim\limits_{m\to\infty}\prod\limits_{n=m+1}^\infty p_n=1
+\end{cases}$$
+\textbf{Proof:}
+$$\begin{cases}
+    (1)\lim\limits_{n\to\infty}p_n=\lim\limits_{n\to\infty}\dfrac{P_n}{P_{n-1}}=1\\
+    (2)\lim\limits_{m\to\infty}\prod\limits_{n=m+1}^\infty p_n=\lim\limits_{m\to\infty}\dfrac{\prod\limits_{n=1}^\infty p_n}{\prod\limits_{n=1}^mp_n}=1
+\end{cases}$$
+(1) can be re-written as: $\prod\limits_{n=1}^\infty(1+a_n)$ converges$\implies\lim\limits_{n\to\infty}a_n=0$
+$$$$
+\textbf{The Wallis Formula}
+$$p_n:=1-\frac{1}{(2n)^2}\implies P_n=\prod_{k=1}^n\left(1-\frac{1}{(2k)^2}\right)=\prod_{k=1}^n\frac{(2k-1)(2k+1)}{2k\cdot 2k}=\frac{\prod\limits_{k=1}^n(2k-1)^2}{\prod\limits_{k=1}^n(2k)^2}\cdot (2n+1)$$
+$$I_n:=\int_0^\frac{\pi}{2}\sin^nx\mbox{d}x\implies I_{2n+1}=\frac{\prod\limits_{k=1}^n(2k)^2}{\prod\limits_{k=1}^n(2k+1)^2},\quad I_{2n}=\frac{\prod\limits_{k=1}^n(2k-1)^2}{\prod\limits_{k=1}^n(2k)^2}\cdot\frac{\pi}{2}\implies\frac{\pi}{2}P_n=\frac{I_{2n}}{I_{2n+1}}$$
+$$I_{2n+1}<I_{2n}<I_{2n-1}\implies1<\frac{I_{2n}}{I_{2n+1}}<\frac{I_{2n-1}}{I_{2n+1}},\quad\lim_{n\to\infty}\frac{I_{2n-1}}{I_{2n+1}}=\lim_{n\to\infty}\frac{2n+1}{2n}=1\implies\lim_{n\to\infty}P_n=\frac{2}{\pi}$$
+\textbf{The Viète Formula}
+\begin{equation}
+\begin{split}
+    p_n:=\cos\frac{x}{2^n},\quad\sin x&=2\cos\frac{x}{2}\cdot\sin\frac{x}{2}\\
+    &=2^2\cos\frac{x}{2}\cdot\cos\frac{x}{2^2}\cdot\sin\frac{x}{2^2}\\
+    &=\cdots\cdots\\
+    &=2^n\cos\frac{x}{2}\cdot\cos\frac{x}{2^2}\cdot\,\dots\,\cdot\cos\frac{x}{2^n}\sin\frac{x}{2^n}
+\end{split}
+\end{equation}
+$$\implies\lim_{n\to\infty}P_n=\lim_{n\to\infty}\prod_{k=1}^n\cos\frac{x}{2^k}=\lim_{n\to\infty}\dfrac{\sin x}{2^n\sin\dfrac{x}{2^n}}=\frac{\sin x}{x}=\prod_{n=1}^\infty\cos\frac{x}{2^n}$$
+Substituting $x=\dfrac{\pi}{2}$, we get: $\dfrac{2}{\pi}=\prod\limits_{n=1}^\infty\cos\dfrac{\pi}{2^{n+1}}$\\
+\textbf{Theorem:}
+$$\lim_{n\to\infty}P_n=\prod_{n=1}^\infty p_n\mbox{ converges}\iff\lim_{n\to\infty}S_n=\sum_{n=1}^\infty\ln p_n\mbox{ converges.}\quad(\mbox{Clearly, as: }P_n=e^{S_n})$$
+\textbf{Inference:}
+$$\mbox{Assume }a_n>0\,(\mbox{or } a_n<0),\,(\mbox{condition for comparison test})\mbox{, then: }\prod_{n=1}^\infty(1+a_n)\mbox{ converges}\iff\sum_{n=1}^\infty a_n\mbox{ converges.}$$
+\textbf{Proof:}
+$$\prod_{n=1}^\infty(1+a_n)\mbox{ converges}\iff\sum_{n=1}^\infty\ln(1+a_n)\mbox{ converges}\implies\lim_{n\to\infty}a_n=0\implies\lim_{n\to\infty}\frac{\ln(1+a_n)}{a_n}=1$$
+$$\implies\mbox{Due to the comparison test, }\sum_{n=1}^\infty a_n\mbox{ converges}\iff\sum_{n=1}^\infty\ln(1+a_n)\mbox{ converges}$$
+\textbf{Inference:}
+$$\mbox{Assume }\sum_{n=1}^\infty a_n\mbox{ converges, then: }\prod_{n=1}^\infty(1+a_n)\mbox{ converges}\iff\sum_{n=1}^\infty a_n^2\mbox{ converges.}$$
+\textbf{Proof:}
+$$\sum_{n=1}^\infty a_n\mbox{ converges}\implies\lim_{n\to\infty}a_n=0\implies\lim_{n\to\infty}\frac{a_n-\ln(1+a_n)}{a_n^2}=\lim_{n\to\infty}\frac{\dfrac{1}{2}a_n^2+o(a_n^2)}{a_n^2}=\frac{1}{2}$$
+$$\implies\mbox{Due to the comparison test, }\sum_{n=1}^\infty a_n^2\mbox{ converges}\iff\sum_{n=1}^\infty\ln(1+a_n)\mbox{ converges}$$
+\textbf{Definition:}
+$$\mbox{If }\sum_{n=1}^\infty \ln p_n\mbox{ is absolutely convergent, we say that }\prod_{n=1}^\infty p_n\mbox{ absolutely converges}$$
+\textbf{Three equivalent statements:}\quad\quad$(a_n>-1)$
+$$\begin{cases}
+    (1)\prod\limits_{n=1}^\infty(1+a_n)\mbox{ absolutely converges}\\
+    (2)\prod\limits_{n=1}^\infty(1+|a_n|)\mbox{ converges}\\
+    (3)\sum\limits_{n=1}^\infty|a_n|\mbox{ converges}
+\end{cases}$$
+(1),(2),(3) all imply that $\lim\limits_{n\to\infty}a_n=0$. Thus, we have:
+$$\lim_{n\to\infty}\frac{|\ln(1+a_n)|}{|a_n|}=1=\lim_{n\to\infty}\frac{\ln(1+|a_n|)}{|a_n|}\mbox{ the result hence follows from the comparison test}$$
+\textbf{Stirling's Approximation:}
+$$n!\sim\sqrt{2\pi}n^{n+\frac{1}{2}}e^{-n}$$
+\textbf{Proof:}
+$$b_n:=\frac{n!e^n}{n^{n+\frac{1}{2}}}\implies1+a_n:=\frac{b_n}{b_{n-1}}=e\left(1-\frac{1}{n}\right)^{n-\frac{1}{2}}=\exp\left(1+\left(n-\frac{1}{2}\right)\ln\left(1-\frac{1}{n}\right)\right)=1-\frac{1}{12n^2}+o\left(\frac{1}{n^2}\right)$$
+$$\implies(\forall n\geq2:a_n<0)\land\left(\sum_{n=2}^\infty a_n\mbox{ converges}\right)\implies\exists B\in\mathbb{R}^+\mbox{ s.t. }B=\prod_{n=2}^\infty(1+a_n)=\prod_{n=2}^\infty\frac{b_n}{b_{n-1}}=\frac{\lim\limits_{n\to\infty}b_n}{b_1}$$
+$$\implies\lim_{n\to\infty}b_n>0\implies\lim_{n\to\infty}\frac{b_n}{b_{2n}}=1\implies$$
+\begin{equation}
+\begin{split}
+    \lim_{n\to\infty}b_n=\lim_{n\to\infty}\frac{b_n^2}{b_{2n}}&=\sqrt{2}\lim_{n\to\infty}\frac{1}{\sqrt{n}}\sqrt{\frac{\prod\limits_{k=1}^n(2k)^2}{\prod\limits_{k=1}^n(2k-1)^2}\cdot\frac{1}{2n+1}\cdot(2n+1)}\\
+    &=\sqrt{2}\cdot\sqrt{\frac{\pi}{2}}\lim_{n\to\infty}\sqrt{\frac{2n+1}{n}}=\sqrt{\pi}\cdot\sqrt{2}=\sqrt{2\pi}\quad\square
+\end{split}
+\end{equation}
+\textbf{The infinite sine product}
+$$\sin x=x\prod_{n=1}^\infty\left(1-\frac{x^2}{n^2\pi^2}\right)\quad\mbox{(In other words, the product of all roots of sine)}$$
+\textbf{Proof:}
+$$\mbox{We try find a general decomposition of }\sin((2n+1)\varphi)\mbox{ with }\sin^2\varphi$$
+$$\mbox{\textbf{Initial conditions: }}\sin3\varphi=\sin\varphi\cdot(3-4\sin^2\varphi),\quad\sin5\varphi=\sin\varphi\cdot(5-20\sin^2\varphi+16\sin^4\varphi)$$
+$$\mbox{\textbf{Inductive step: }}\sin((2k+1)\varphi)=2(1-2\sin^2\varphi)\sin((2k-1)\varphi)-\sin((2k-3)\varphi)\quad$$
+\null\hfill(sum to product identity and rearrange)\\
+Thus, by the law of induction, we have:
+$$\sin((2n+1)\varphi)=\sin\varphi\cdot P(\sin^2\varphi)$$
+Where $P$ is a $n^{\mbox{th}}$ order polynomial, its constant term is:
+$$P(0)=\lim_{\varphi\to0}P(\sin^2\varphi)=\lim_{\varphi\to0}\frac{\sin(2n+1)}{\sin\varphi}=2n+1$$
+Let $\varphi=\dfrac{k\pi}{2n+1}$, then:
+$$\sin\varphi\cdot P(\sin^2\varphi)=\sin((2n+1)\varphi)=\sin\left((2n+1)\cdot\frac{k\pi}{2n+1}\right)=0$$
+$$\sin\varphi\neq0\implies P(\sin^2\varphi)=P\left(\sin^2\left(\frac{k\pi}{2n+1}\right)\right)=0\mbox{ for }k=1,2,\dots,n\implies$$
+$$P(\sin^2\varphi)=(2n+1)\cdot\prod_{k=1}^n\left(1-\dfrac{\sin^2\varphi}{\sin^2\left(\dfrac{k\pi}{2n+1}\right)}\right)\implies \sin((2n+1)\varphi)=(2n+1)\cdot\sin\varphi\cdot\prod_{k=1}^n\left(1-\dfrac{\sin^2\varphi}{\sin^2\left(\dfrac{k\pi}{2n+1}\right)}\right)$$
+Let $x=(2n+1)\varphi$, then we get:
+$$\sin x=(2n+1)\cdot\sin\left(\dfrac{x}{2n+1}\right)\cdot\prod_{k=1}^n\left(1-\dfrac{\sin^2\left(\dfrac{x}{2n+1}\right)}{\sin^2\left(\dfrac{k\pi}{2n+1}\right)}\right)$$
+Fix $m$, when $n>m$, there is:
+$$\dfrac{\sin x}{(2n+1)\cdot\sin\left(\dfrac{x}{2n+1}\right)\cdot\prod\limits_{k=1}^m\left(1-\dfrac{\sin^2\left(\dfrac{x}{2n+1}\right)}{\sin^2\left(\dfrac{k\pi}{2n+1}\right)}\right)}=\prod_{k=m+1}^n\left(1-\dfrac{\sin^2\left(\dfrac{x}{2n+1}\right)}{\sin^2\left(\dfrac{k\pi}{2n+1}\right)}\right)$$
+The limit of the left hand side when $n\to\infty$ is
+$$\frac{\sin x}{x\prod\limits_{k=1}^m\left(1-\dfrac{x^2}{k^2\pi^2}\right)}$$
+$$$$
+$$\sin^2\left(\frac{x}{2n+1}\right)\le\frac{x^2}{(2n+1)^2},\quad\sin^2\left(\frac{k\pi}{2n+1}\right)\geq\frac{4}{\pi^2}\cdot\frac{k^2\pi^2}{(2n+1)^2}\quad(k=1,2,\dots,n)$$
+$$\implies1>\prod_{k=m+1}^n\left(1-\frac{\sin^2\left(\dfrac{x}{2n+1}\right)}{\sin^2\left(\dfrac{k\pi}{2n+1}\right)}\right)\geq\prod_{k=m+1}^n\left(1-\frac{x^2}{4k^2}\right)>\prod_{k=m+1}^\infty\left(1-\frac{x^2}{4k^2}\right)$$
+Let $n\to\infty$, we have:
+$$1\geq\frac{\sin x}{x\cdot\prod\limits_{k=1}^m\left(1-\dfrac{x^2}{k^2\pi^2}\right)}\geq\prod_{k=m+1}^\infty\left(1-\frac{x^2}{4k^2}\right)$$
+As $\sum\limits_{k=1}^\infty\dfrac{-x^2}{4k^2}$ monotonically converges, $\prod\limits_{k=1}^\infty\left(1-\dfrac{x^2}{n^2\pi^2}\right)$ converges. Let $m\to\infty$, according to the sandwich law:
+$$\sin x=x\prod_{n=1}^\infty\left(1-\frac{x^2}{n^2\pi^2}\right)$$
+\section{Function Series}
+\subsection{Uniform Convergence of Functions}
+\textbf{Definition:} Let $u_n(x)\,(n=1,2,\dots)$ be a set of functions defined on $E$, then
+$$D:=\left\{\forall x_D\in E\,\middle\vert\,\exists\sum_{n=1}^\infty u_n(x_D)\right\},\quad S(x):=\sum_{n=1}^\infty u_n(x)\,(x\in D),\quad S_n(x):=\sum_{k=1}^n u_k(x)\,\mbox{ is the partial sum function}$$
+\subsubsection{Arithmetic of limits}
+Here are three sets of two equivalent false propositions extrapolated from the finite arithmetic of limits:
+\begin{equation}
+\begin{split}
+    (a)\,&\lim_{x\to x_n}S(x)=\lim_{x\to x_n}\lim_{n\to\infty}S_n(x)=\lim_{n\to\infty}\lim_{x\to x_0}S_n(x)\iff\lim_{x\to x_n}\sum_{n=1}^\infty u_n(x)=\sum_{n=1}^\infty\lim_{x\to x_0}u_n(x)\\
+    (b)\,&\frac{d}{dx}S(x)=\frac{d}{dx}\lim_{n\to\infty}S_n(x)=\lim_{n\to\infty}\frac{d}{dx}S_n(x)\iff\frac{d}{dx}\sum_{n=1}^\infty u_n(x)=\sum_{n=1}^\infty\frac{d}{dx}u_n(x)\\
+    (c)\,&\int_a^bS(x)dx=\int_a^b\lim_{n\to\infty}S_n(x)dx=\lim_{n\to\infty}\int_a^bS_n(x)dx\iff\int_a^b\sum_{n=1}^\infty u_n(x)dx=\sum_{n=1}^\infty\int_a^bu_n(x)dx
+\end{split}
+\end{equation}
+\textbf{Counter Examples:}
+\begin{equation}
+\begin{split}
+    &(a)\,S_n(x):=x^n\implies D=(-1,1],\,S(x)=\begin{cases}
+        0,\,&x\in(-1,1)\\
+        1,\,&x=1
+    \end{cases}\implies\lim_{x\to1}S(x)=0\neq\lim_{n\to\infty}\lim_{x\to1}S_n(x)=1\\
+    &(b)\,S_n(x):=\frac{\sin(nx)}{\sqrt{n}}\implies D=\mathbb{R},\,S(x)=0\implies S'(x)=0\neq\lim_{n\to\infty}S_n'(x)=\lim_{n\to\infty}\sqrt{n}\cos(nx)\mbox{ diverges}\\
+    &(c)\,S_n(x):=\begin{cases}
+        1,\,&x\cdot n!\in\mathbb{Z}\\
+        0,\,&\mbox{otherwise}
+    \end{cases}\quad\mbox{ clearly, }\forall n,a,b:\int_a^bS_n(x)dx=0\implies\lim_{n\to\infty}\int_a^bS_n(x)dx=0\,\\
+    &\,\,\quad\mbox{However, }S(x)\mbox{ is the Dirichlet function, which is unintegrable}\\
+    &\,\,\quad S_n(x):=nx(1-x^2)^n\implies D=[0,1],\,S(x)=0\mbox{ clearly, }S_n(x)\mbox{ and }S(x)\mbox{ are both integrable. However:}\\
+    &\,\,\quad\lim_{n\to\infty}\int_0^1S_n(x)dx=\lim_{n\to\infty}\int_0^1nx(1-x^2)^ndx=\lim_{n\to\infty}\left(-\frac{n}{2}\int_0^1(1-x^2)^nd(1-x^2)\right)=\lim_{n\to\infty}\frac{n}{2(n+1)}=\frac{1}{2}\\
+    &\,\,\quad\neq\int_0^1S(x)dx=\int_0^10dx=0
+\end{split}
+\end{equation}
+\subsubsection{Uniform convergence of function series}
+\textbf{Definition:} Denote $\{S_n(x)\}$ uniformly converges to $S(x)$ as: $S_n(x)\rightrightarrows S(x)$
+$$S_n(x)\rightrightarrows S(x):=\forall\varepsilon>0,\exists N\mbox{ s.t. }\forall n>N,\forall x\in D:\left|S_n(x)-S(x)\right|<\varepsilon$$
+\textbf{Inference:} $S_n(x)\rightrightarrows S\implies u_n\rightrightarrows0$\\
+\textbf{Proof:}
+$$|u_n-0|=|S_{n+1}-S_n-S+S|\le|S_{n+1}-S|+|S-S_n|<2\varepsilon$$
+Graphically, $|S_n(x)-S(x)|<\varepsilon$ can be interpreted as a region bounded by $S(x)-\varepsilon$ and $S(x)+\varepsilon$, in which all $S_n(x)\,(n>N)$ has to fall\\
+\textbf{Example:}
+$$S_n(x):=x^n(x\in[0,1)),\,S(x)=0,\mbox{ Assume }S_n(x)\rightrightarrows S(x)\implies\exists N\mbox{ s.t. }\forall n>N:|S_n(x)-S(x)|=x^n<\varepsilon$$
+$$\implies\forall n>N:n>\frac{\ln\varepsilon}{\ln x}\implies \forall x\in[0,1):N\geq\left\lceil\frac{\ln\varepsilon}{\ln x}\right\rceil\mbox{ however, }\forall\varepsilon:\lim_{x\to1}\frac{\ln\varepsilon}{\ln x}=+\infty\implies\neg(S_n(x)\rightrightarrows S(x))$$
+However, $S_n(x)$ \textbf{Inner Closed Uniformly Converges}, which means: $\forall[a,b]\subset D:S_n(x)\rightrightarrows S(x)\,(x\in[a,b])$
+\null\hfill(Clearly)\\
+\textbf{Definition:} $d(S_n,S):=\sup\limits_{x\in D}|S_n(x)-S(x)|$\\
+\textbf{Theorem:} $\{S_n(x)\}\rightrightarrows S(x)\iff\lim_{n\to\infty}d(S_n,S)=0$\\
+\textbf{Proof:}
+$$\{S_n(x)\}\rightrightarrows S(x)\implies\forall\varepsilon>0,\exists N\mbox{ s.t.}\left(\forall n>N,\forall x\in D:\left|S_n(x)-S(x)\right|<\frac{\varepsilon}{2}\right)$$
+$$\implies\forall n>N:d(S_n,S)\le\frac{\varepsilon}{2}<\varepsilon\implies\lim_{n\to\infty}d(S_n,S)=0$$
+$$\lim_{n\to\infty}d(S_n,S)=0\implies\forall\varepsilon>0,\exists N\mbox{ s.t. }\forall n>N:|S_n(x)-S(x)|\le d(S_n,S)\le\varepsilon$$
+\textbf{Theorem:}
+$$S_n(x)\rightrightarrows S(x)\iff\forall\{x_n\}\subset D:\lim_{n\to\infty}(S_n(x_n)-S(x))=0$$
+\textbf{Proof:}
+$$S_n(x)\rightrightarrows S(x)\iff \lim_{n\to\infty}d(S_n,S)=0,\,d(S_n,S)\geq|S_n(x_n)-S(x_n)|\implies\lim_{n\to\infty}|S_n(x_n)-S_(x_n)|=0$$
+$$\neg(S_n(x)\rightrightarrows S(x))\iff\exists\varepsilon_0>0,\forall N>0,\exists n>N\mbox{ s.t. }\exists x\in D:|S_n(x)-S(x)|\geq\varepsilon_0$$
+\begin{equation}
+\begin{split}
+    &\mbox{Let }N_1=1,\exists n_1>1,\exists x_{n_1}\in D:|S_{n_1}(x_{n_1})-S(x_{n_1})|\geq\varepsilon_0\\
+    &\mbox{Let }N_1=n_1,\exists n_2>n_1,\exists x_{n_2}\in D:|S_{n_2}(x_{n_2})-S(x_{n_2})|\geq\varepsilon_0\\
+    &\cdots\cdots\\
+    &\mbox{Let }N_k=n_{k-1},\exists n_k>n_{k-1},\exists x_{n_k}\in D:|S_{n_k}(x_{n_k})-S(x_{n_k})|\geq\varepsilon_0\\
+    &\cdots\cdots
+\end{split}
+\end{equation}
+$\forall m\in\mathbb{N}^+\symbol{92}\{n_1,n_2,\dots\}$, select an arbitrary $x_m$, thus completing $\{x_n\}$ which clearly doesn't satisfy $$\lim\limits_{n\to\infty}(S_n(x_n)-S(x_n))=0$$
+\subsection{Test and Properties of Uniform Convergent Series}
+\subsubsection{Test for Uniform Convergent Series}
+\textbf{Theorem:}
+$$S_n(x)\rightrightarrows S(x)\iff\forall \varepsilon>0,\exists N(\varepsilon)\mbox{ s.t. }\forall m>n>N(\varepsilon):|S_m(x)-S_n(x)|<\varepsilon$$
+\textbf{Proof:}
+$$S_n(x)\rightrightarrows S(x)\implies\forall\varepsilon>0,\exists N(\varepsilon)\mbox{ s.t. }\forall n>N:|S_n(x)-S(x)|<\frac{\varepsilon}{2}$$
+$$\implies\forall m>n>N(\varepsilon):|S_m(x)-S_n(x)|\le|S_n(x)-S(x)|+|S_m(x)-S(x)|<\frac{\varepsilon}{2}+\frac{\varepsilon}{2}=\varepsilon$$
+$$$$
+$$\forall\varepsilon>0,\exists N\left(\frac{\varepsilon}{2}\right)\mbox{ s.t. }\forall m>n>N\left(\frac{\varepsilon}{2}\right):|S_m(x)-S_n(x)|<\frac{\varepsilon}{2}$$
+$$\implies\lim_{m\to\infty}|S_m(x)-S_n(x)|=|S(x)-S_n(x)|\le\frac{\varepsilon}{2}<\varepsilon$$
+\textbf{Theorem: (Weierstrass Test)}
+$$\mbox{Assume }\sum_{n=1}^\infty a_n\mbox{ converges and }\forall u_n(x)\in\{u_n(x)\}:|u_n(x)|<a_n\implies S_n(x)\rightrightarrows S(x)$$
+\textbf{Proof:}
+$$\forall m>n:|u_{n+1}(x)+u_{n+2}(x)+\dots+u_{m}(x)|\le|u_{n+1}(x)|+|u_{n+2}(x)|+\dots+|u_{m}(x)|$$
+$$\le a_{n+1}+a_{n+1}+\dots+a_{m}\quad\mbox{(Clearly)}$$
+\textbf{Definition: (Uniform Boundedness)}
+$$\{u_n(x)\}\mbox{ is uniformly bounded}\iff\exists M>0\mbox{ s.t. }\forall n\in\mathbb{N}^+,\forall x\in D:|u_n(x)|\le M$$
+\textbf{The Abel Test and the Dirichlet Test:}
+\begin{equation}
+\begin{split}
+    \mbox{\textbf{Abel Test}}\quad&\forall x\in D:(\{a_n(x)\}\searrow\lor\{a_n(x)\}\nearrow)\land \{a_n(x)\}\mbox{ is uniformly bounded}\land \sum\limits_{n=1}^\infty b_n(x)\rightrightarrows B(x)\\
+    &\implies\left\{\sum_{k=1}^n a_k(x)b_k(x)\right\}\ucov \infsum a_nb_n=S(x)\\
+    \mbox{\textbf{Dirichlet test}}\quad&\forall x\in D:(\{a_n(x)\}\searrow\lor\{a_n(x)\}\nearrow)\land\{a_n(x)\}\ucov0\land\infsum b_n(x)\mbox{ is uniformly bounded}\\
+    &\implies\left\{\sum_{k=1}^n a_k(x)b_k(x)\right\}\ucov \infsum a_nb_n=S(x)\\
+\end{split}
+\end{equation}
+\textbf{Proof:}
+\begin{equation}
+\begin{split}
+    \mbox{\textbf{Abel Test}}\quad&\forall \varepsilon>0,\exists N(\varepsilon)\st\forall m>n>N(\varepsilon):\left|\sum_{k=n+1}^mb_k\right|\le\varepsilon\xRightarrow[\mbox{Abel inference}]{}\\
+    &\left|\sum_{k=n+1}^ma_k(x)b_k(x)\right|\le\varepsilon(|a_{n+1}(x)|+2|a_m(x)|)\le 3M\varepsilon\quad\mbox{(Clearly, Cauchy convergence)}\\
+    \mbox{\textbf{Dirichlet test}}\quad&(\forall \varepsilon>0,\exists N(\varepsilon)\st\forall n>N(\varepsilon):|a_n(x)|<\varepsilon)\land\\
+    &\left(\exists M>0\st\forall m>n:\left|\sum_{k=n+1}^mb_k(x)\right|=\left|B_m(x)-B_n(x)\right|\le2M\right)\\
+    &\implies\left|\sum_{k=n+1}^ma_k(x)b_k(x)\right|\le2M(|a_{n+1}(x)|+2|a_m(x)|)<6M\varepsilon
+\end{split}
+\end{equation}
+\null\hfill{\mbox{Why is this proof not convoluted?}}
+\subsubsection{Properties of Uniform Convergent Series}
+\textbf{Theorem: (The Continuity Theorem)}
+$$(\forall S_n(x)\in\{S_n(x)\}:\,S_n(x)\mbox{ is continuous})\land S_n(x)\ucov S(x)\implies S(x)\mbox{ is continuous}\quad(\mbox{Domain: }[a,b])$$
+\textbf{Proof:}
+$$S_n(x)\ucov S(x)\implies\forall x_0,x_0+h\in[a,b],\forall\varepsilon,\exists N\in\N^+\st\forall n>N:|S_n(x_0)-S(x_0)|,|S_n(x_0+h)-S(x_0+h)|<\frac{\varepsilon}{3}$$
+$$S_n(x)\mbox{ is continuous}\implies\forall x_0\in[a,b],\forall\varepsilon>0,\exists\delta>0\st\forall h\in(0,\delta):|S_n(x_0+h)-S_n(x_0)|<\frac{\varepsilon}{3}$$
+$$\implies |S(x_0+h)-S(x_0)|\le|S(x_0+h)-S_n(x_0+h)|+|S_n(x_0+h)-S_n(x_0)|+|S_n(x_0)-S(x_0)|<\varepsilon$$
+\textbf{Theorem:}
+$$(\forall S_n(x)\in\{S_n(x)\}:\,S_n(x)\mbox{ is continuous})\land S_n(x)\ucov S(x)\implies\int_a^bS(x)dx=\limninf\int_a^bS_n(x)dx$$
+$$\mbox{Under the same conditions: }\forall x_0,x\in[a,b]:\limninf\int_{x_0}^xS_n(x)dx\ucov\int_{x_0}^xS(x)dx$$
+\textbf{Proof:}
+$$S_n(x)\ucov S(x)\implies\forall\varepsilon>0,\forall x\in[a,b],\exists N\in\N^+\st\forall n>N:|S_n(x)-S(x)|<\varepsilon$$
+$$\implies\left|\int_a^bS_n(x)dx-\int_a^bS(x)dx\right|\le\int_a^b|S_n(x)-S(x)|dx<(b-a)\varepsilon$$
+$$\left|\int_{x_0}^xS_n(x)dx-\int_{x_0}^xS(x)dx\right|\le\int_{x_0}^x\left|S_n(x)-S(x)\right|dx\le\int_a^b\left|S_n(x)-S(x)\right|dx<(b-a)\varepsilon$$
+Here, the continuity condition is not necessary, the above proof uses continuity to imply integrability.\\
+\textbf{Example:}
+$$\forall x\in(-1,1):\infsum \frac{(-1)^{n-1}}{2n-1}x^{2n-1}=x-\frac{1}{3}x^3+\frac{1}{5}x^5-\cdots=\arctan x$$
+\textbf{Proof:}
+$$\forall x\in(-1,1),\exists\delta>0\st x\in[-1+\delta,1-\delta]$$
+$$\sum_{k=1}^n(-x^2)^{n-1}=\frac{1-(-x^2)^n}{1-x^2},\forall x\in[-1+\delta,1-\delta]:(-x^2)^n\ucov0\implies\frac{1-(-x^2)^n}{1-x^2}\ucov\frac{1}{1-x^2}$$
+$$\implies\infsum\int_0^x(-t^2)^{n-1}dt=\int_0^x\frac{dt}{1+t^2}\implies\infsum \frac{(-1)^{n-1}}{2n-1}x^{2n-1}=x-\frac{1}{3}x^3+\frac{1}{5}x^5-\cdots=\arctan x$$
+\textbf{Example:}
+$$\infsum\frac{-(-x)^n}{n}=x-\frac{1}{2}x^2+\frac{1}{3}x^3-\cdots=\ln(1+x)$$
+\textbf{Proof:}
+$$\forall x\in(-1,1),\exists \delta>0\st x\in[-1+\delta,1-\delta]\mbox{ similar to the last example, }\infsum(-x)^{n-1}\ucov S(x)=\frac{1}{1+x}$$
+$$\implies\infsum\frac{-(-x)^n}{n}=\infsum\int_0^x(-t)^{n-1}dt=\int_0^x\frac{dt}{1+t}=\ln(1+x)$$
+\textbf{Theorem:}
+$$(\forall n\in\N^+,S_n'(x)\mbox{ is continuous})\land(\{S_n(x)\}\mbox{ is convergent})\land(\{S_n'(x)\}\ucov\sigma(x))\quad(\mbox{the range is }[a,b])$$
+$$\iff\difx\limninf S_n(x)=\limninf\difx S_n(x)\iff\difx S(x)=\limninf S_n'(x)=\sigma(x)$$
+\textbf{Proof:}
+$$\sigma(x)=\difx\int_a^x\sigma(t)dt=\difx\limninf\int_a^xS_n'(t)dt=\difx\limninf[S_n(x)-S_n(a)]=\difx[S(x)-S(a)]=S'(x)$$
+\textbf{Example:}
+$$\forall x\in(-1,1):\infsum nx^n=\frac{x}{(1-x)^2}$$
+\null\hfill{Prove as an exercise}\\
+\textbf{The Dini Theorem:}
+$$(\forall n\in\N^+,S_n(x)\mbox{ is continuous})\land(S(x)\mbox{ is continuous})\land(\forall x\in D:(\{S_n(x)\}\minc\lor\{S_n(x)\}\mdec))$$
+$$\implies \{S_n(x)\}\ucov S(x)\quad\mbox{(the range is $[a,b]$)}$$
+\textbf{Proof:}
+$$\neg(S_n(x)\rightrightarrows S(x))\iff\exists\varepsilon_0>0,\forall N>0,\exists n>N\mbox{ s.t. }\forall x:|S_n(x)-S(x)|\geq\varepsilon_0$$
+\begin{equation}
+\begin{split}
+    &\mbox{Let }N_1=1,\exists n_1>1,\exists x_1\in [a,b]:|S_{n_1}(x_1)-S(x_1)|\geq\varepsilon_0\\
+    &\mbox{Let }N_2=n_1,\exists n_2>n_1,\exists x_2\in [a,b]:|S_{n_2}(x_2)-S(x_2)|\geq\varepsilon_0\\
+    &\cdots\cdots\\
+    &\mbox{Let }N_k=n_{k-1},\exists n_k>n_{k-1},\exists x_k\in [a,b]:|S_{n_k}(x_k)-S(x_k)|\geq\varepsilon_0\\
+    &\cdots\cdots
+\end{split}
+\end{equation}
+$$\exists\{x_{n_l}\}\subset\{x_n\}\st\lim_{l\to\infty}x_{n_l}=\xi\in[a,b]\implies\exists N\in\N^+\st|S_N(\xi)-S(\xi)|<\frac{\varepsilon_0}{2}$$
+$$\xRightarrow[\mbox{continuity}]{}\exists L\in\N^+\st\forall l>L:|S_N(x_{n_l})-S(x_{n_l})|<\varepsilon_0$$
+$$\xRightarrow[\mbox{monotonicity}]{}\forall n>N:|S_n(x_{n_l})-S(x_{n_l})|\le|S_N(x_{n_l})-S(x_{n_l})|<\varepsilon_0\quad(\mbox{Contradiction})$$
+The last two steps allows $n$ and $l$ to be arbitrarily large, thus allowing for $n=n_k$ and $n_l=k$, which ultimately causes the contradiction
+\subsubsection{Continuous Everywhere, Differentiable Nowhere}
+$$\varphi(x):=|x-[x]|\quad\mbox{Clearly, $\varphi(x)$ is a continuous periodic function of period 1}$$
+$$f(x):=\sum_{n=0}^\infty\frac{\varphi(10^nx)}{10^n},\mbox{ clearly, }\left|\frac{\varphi(10^nx)}{10^n}\right|\le\frac{1}{2\cdot10^n}\he\sum_{n=0}^\infty\frac{1}{2\cdot10^n}\mbox{ converges }\implies\sum_{k=1}^n\frac{\varphi(10^kx)}{10^k}\ucov f(x)$$
+$$\implies f(x)\mbox{ is continuous},\quad x\in(-\infty,+\infty)$$
+$$\mbox{Considering the periodic property of }f(x)\mbox{ let }x\in[0,1),\,x=0.a_1a_2\dots a_n\dots$$
+$$h_m:=\begin{cases}
+    10^{-m}&a_m=0,1,2,3,5,6,7,8\\
+    -10^{-m}&a_m=4,9
+\end{cases}\quad\left(\mbox{clearly, }\lim_{m\to0}h_m=0\right)$$
+$$\implies\begin{cases}
+    \varphi(10^n(x+h_m))=\varphi(10^nx\pm10^{n-m})=\varphi(10^nx)&n\geq m\\
+    10^n(x+h_m),10^nx\in\left[k,k+\dfrac{1}{2}\right]\lor10^n(x+h_m),10^nx\in\left[k+\dfrac{1}{2},k+1\right]\quad(k\in\N)&n<m
+\end{cases}$$
+$$\implies\varphi(10^n(x+h_m))-\varphi(10^nx)=\pm10^nh_m$$
+$$\frac{f(x+h_m)-f(x)}{h_m}=\sum_{n=0}^\infty\frac{\varphi(10^n(x+h_m))-\varphi(10^nx)}{10^nh_m}=\sum_{n=0}^{m-1}\pm1\mbox{, is even when $m$ is and odd when $m$ is}$$
+$$\mbox{Thus, }\frac{f(x+h_m)-f(x)}{h_m}\mbox{ flips between odd and even and }\lim_{m\to\infty}\frac{f(x+h_m)-f(x)}{h_m}\mbox{ clearly does not exist}$$
+\subsection{Power Series}
+\subsubsection{Convergent Radius of Power Series}
+For all power series $\sum\limits_{n=0}^\infty a_nx^n$, $\overline{\lim}_{n\to\infty}\sqrt[n]{|a_nx^n|}=|x|\cdot\overline{\lim}_{n\to\infty}\sqrt[n]{|a_n|},\quad A:=\overline{\lim}_{n\to\infty}\sqrt[n]{|a_n|}$\\
+\textbf{The convergence radius $R$:}
+$$R:=\begin{cases}
+    +\infty&A=0\\
+    \dfrac{1}{A}&A\in(0,+\infty)\\
+    0&A=+\infty
+\end{cases}$$
+$$D:=\mbox{The convergent domain}$$
+\textbf{The Cauchy-Hadamard Theorem:}
+$$\infsum a_nx^n:\begin{cases}
+    \mbox{Converges}&|x|<R\\
+    \mbox{Undetermined}&|x|=R\\
+    \mbox{Diverges}|x|>R&
+\end{cases}$$
+\textbf{Theorem: The D'Alembert Test}\\
+If for $\lim\limits_{n\to\infty}\left|\dfrac{a_{n+1}}{a_n}\right|=A$ then: $R=\dfrac{1}{A}$\\
+This is derived from: $\underline{\lim}_{n\to\infty}\dfrac{x_{n+1}}{x_n}\le\underline{\lim}_{n\to\infty}\sqrt[n]{x_n}\le\overline{\lim}_{n\to\infty}\sqrt[n]{x_n}\le\overline{\lim}_{n\to\infty}\dfrac{x_{n+1}}{x_n}$
+\subsubsection{Properties of Power Series}
+\textbf{Abel's Second Theorem}
+$$\mbox{The Convergent Radius of }\sum_{n=0}^\infty a_nx^n\mbox{ is }R\implies$$
+$$\begin{cases}
+    (1)\,\forall [a,b]\subset(-R,R):\sum\limits_{n=0}^\infty a_nx^n\ucov S(x)\\
+    (2)\,\mbox{if }\sum\limits_{n=0}^\infty a_nx^n\mbox{ converges at }x=R\mbox{, then }\forall [a,R]\subset(-R,R]:\sum\limits_{n=0}^\infty a_nx^n\ucov S(x)
+\end{cases}$$
+\textbf{Proof:}
+$$\begin{cases}
+    (1)\,&\xi:=\max\{|a|,|b|\}\implies\forall x\in[a,b]:|a_nx^n|\le|a_n\xi^n|,\quad\mbox{as }|\xi|<R,\sum\limits_{n=0}^\infty|a_n\xi^n|\mbox{ converges}\\
+    &\xRightarrow[\mbox{Weierstrass Test}]{}\sum\limits_{n=0}^\infty a_nx^n\ucov S(x)\\
+    (2)\,&\left(\dfrac{x}{R}\right)^n\mbox{ is uniformly bounded and monotone with respect to }n\xRightarrow[\mbox{Abel Test}]{}\sum\limits_{n=0}^\infty(a_nR^n)\left(\dfrac{x}{R}\right)^n\ucov S(x)
+\end{cases}$$
+\textbf{Inference 1:}
+$$\sum\limits_{n=0}^\infty a_nx^n\mbox{ is continuous on }D$$
+\null\hfill{Proof as an exercise}\\
+\textbf{Inference 2:}
+$$(1)\,\forall a,b\in D:\int_a^b\sum_{n=0}^\infty a_nx^ndx=\sum_{n=0}^\infty\int_a^ba_nx^ndx$$
+$$(2)\,\mbox{Specifically: }\int_0^x\sum_{n=0}^\infty a_nt^ndt=\sum_{n=0}^\infty\dfrac{a_n}{n+1}x^{n+1}\mbox{ has the same convergent radius as }\sum_{n=0}^\infty a_nx^n$$
+\textbf{Proof:}
+$$(1)\,\mbox{prove as an exercise}$$
+$$(2)\,\overline{\lim}_{n\to\infty}\sqrt[n+1]{\frac{|a_n|}{n+1}}=\overline{\lim}_{n\to\infty}\sqrt[n]{|a_n|},\quad\mbox{However, the convergent domain may be larger}$$
+\textbf{Inference 3:}
+$$\forall x\in(-R,R),\,\difx\sum_{n=0}^\infty a_nx^n=\sum_{n=0}^\infty\difx a_nx^n=\infsum na_nx^{n-1}\mbox{ has the same convergent radius as }\sum_{n=0}^\infty a_nx^n$$
+\textbf{Proof:}\\
+Prove the inference as an exercise
+$$\overline{\lim}_{n\to\infty}\sqrt[n-1]{n|a_n|}=\overline{\lim}_{n\to\infty}\sqrt[n]{|a_n|}\mbox{ (thus the convergence radius)}$$
+\textbf{Theorem:}
+$$\infsum c_n:=\infsum\sum_{i+j=n+1}a_ib_j,\mbox{ then: }\infsum a_n,\,\infsum b_n,\,\infsum c_n\mbox{ converge}\implies\infsum c_n=\left(\infsum a_n\right)\left(\infsum b_n\right)$$
+\textbf{Proof:}
+$$\infsum a_nx^n,\,\infsum b_nx^n,\,\infsum c_nx^n\mbox{ all converge at }x=1\mbox{, continuous on }[0,1]\mbox{, and are absolute convergent on }(0,1)$$
+$$\implies\left(\infsum a_nx^n\right)\left(\infsum b_nx^n\right)=x\infsum c_nx^n,\,\mbox{ let }x\to1^-\implies\left(\infsum a_n\right)\left(\infsum b_n\right)=\infsum c_n$$
+\subsection{Expansion of functions as Power Series}
+\subsubsection{Taylor Series and its Remainders}
+$$\mbox{Assume }f(x)=\sum_{n=0}^\infty a_n(x-x_0)^n\mbox{ with convergent radius }r\mbox{ then: }\forall k\in\N^+:f^{(k)}(x)=\sum_{n=k}^\infty\dfrac{n!}{(n-k)!}a_n(x-x_0)^{n-k}$$
+$$\mbox{Let }x=x_0\mbox{, we get: }a_k=\frac{f^{(k)}(x_0)}{k!},k\in\N$$
+$$\mbox{The \textbf{Taylor Series} of }f(x)\mbox{ on }x_0\mbox{ is: }\sum_{n=0}^\infty\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n$$
+However, conversely, even if $f(x)$ is any order differentiable on some neighbourhood $O(x_0,r)$, there may not exist $\rho\in(0,r]\st\sum\limits_{n=0}^\infty\dfrac{f^{(n)}(x_0)}{n!}(x-x_0)^n\ucov f(x)$\\
+\textbf{Inference:}
+$$f(x)=\sum_{n=0}^\infty \dfrac{f^{(n)}(x_0)}{n!}(x-x_0)^n\iff\limninf r_n(x)=0,\quad\mbox{(Clearly)}$$
+\textbf{Theorem:}
+Let $f(x)$ be any order differentiable on $O(x_0,r)$, then:
+$$r_n(x)=\frac{1}{n!}\int_{x_0}^xf^{(n+1)}(t)(x-t)^ndt$$
+\textbf{Proof:}
+\begin{equation}
+\begin{split}
+    &r_n(x)=f(x)-\sum_{k=0}^n\dfrac{f^{(k)}(x_0)}{k!}(x-x_0)^k\\
+    &r'_n(x)=f'(x)-\sum_{k=1}^n\dfrac{f^{(k)}(x_0)}{(k-1)!}(x-x_0)^{k-1}\\
+    &\cdots\cdots\\
+    &r^{(n)}_n(x)=f^{(n)}(x)-f^{(n)}(x_0)\\
+    &r^{(n+1)}_n(x)=f^{(n+1)}(x)
+\end{split}
+\end{equation}
+Let $x=x_0$, we get:
+$$r_n(x_0)=r'_n(x_0)=\dots=r^{(n)}_n(x_0)=0\implies$$
+Repeatedly applying integration by parts, we get:
+$$r_n(x)=r_n(x)-r_n(x_0)=\int_{x_0}^xr_n'(t)dt=\int_{x_0}^xr_n''(t)(x-t)dt=\dots=\frac{1}{n!}\int_{x_0}^xf^{(n+1)}(t)(x-t)^ndt\quad\square$$
+Applying the first intermediate value theorem of integration, considering that $t\in[x_0,x]$ or $[x,x_0]\implies$
+$$(1)\,r_n(x)=\dfrac{f^{(n+1)}(\xi)}{n!}\int_{x_0}^x(x-t)^ndt\,(\xi\in[x_0,x]\mbox{ or }[x,x_0])=\frac{f^{(n+1)}(x_0+\theta(x-x_0))}{(n+1)!}(x-x_0)^{n+1}\,(\theta\in[0,1])$$
+$$(2)\,r_n(x)=\dfrac{f^{(n+1)}(\xi)(x-\xi)^n}{n!}\int_{x_0}^x1dt\,(\xi\in[x_0,x]\mbox{ or }[x,x_0])=\frac{f^{(n+1)}(x_0+\theta(x-x_0))}{n!}(1-\theta)^n(x-x_0)^{n+1}\,(\theta\in[0,1])$$
+\subsubsection{Taylor Expansion of Elementary Functions}
+$$\begin{matrix}
+    (1)\,&f(x)=e^x=\sum\limits_{n=0}^\infty\dfrac{x^n}{n!},&x\in(-\infty,\infty)\\[8pt]
+    (2)\,&f(x)=\sin x=\sum\limits_{n=0}^\infty\dfrac{(-1)^n}{(2n+1)!}x^{2n+1},&x\in(-\infty,\infty)\\[8pt]
+    (3)\,&f(x)=\cos x=\sum\limits_{n=0}^\infty\dfrac{(-1)^n}{(2n)!}x^{2n},&x\in(-\infty,\infty)\quad\mbox{(Similarly to (2))}\\[8pt]
+    (4)\,&f(x)=\arctan x=\infsum\dfrac{(-1)^{n-1}}{2n-1}x^{2n-1},&x\in[-1,1]\\[8pt]
+    (5)\,&f(x)=\ln(1+x)=\infsum\dfrac{(-1)^{n-1}}{n}x^n,&x\in(-1,1]\\[14pt]
+    (6)\,&f(x)=(1+x)^\alpha,&\alpha\neq0\\[8pt]
+    (7)\,&f(x)=\arcsin x=x+\infsum\dfrac{(2n-1)!!}{(2n)!!}\cdot\dfrac{x^{2n+1}}{2n+1},&x\in[-1,1]
+\end{matrix}$$
+\textbf{Proof:}
+\begin{equation}
+\begin{split}
+    (1)\,&|r_n(x)|=\left|\frac{f^{(n+1)}(\theta x)}{(n+1)!}x^{n+1}\right|=\left|\frac{e^{\theta x}}{(n+1)!}x^{n+1}\right|<\frac{e^{|x|}}{(n+1)!}|x|^{n+1}\to0\quad(n\to\infty)\quad\theta\in(0,1)\\
+    (2)\,&|r_{n+2}(x)|=\left|\frac{f^{(2n+3)}(\theta x)}{(2n+3)!}x^{2n+3}\right|<\left|\frac{x^{2n+3}}{(2n+3)!}\right|\to0\quad(n\to\infty)\\
+    (3)\,&\mbox{Similar to (2)}\\
+    (4)\,&\mbox{Has been provided as an example in 11.2.2}\\
+    (5)\,&\mbox{Has been provided as an example in 11.2.2}\\    (6)\,&\alpha=m\in\N^+:f(x)=\sum_{k=0}^m\begin{pmatrix}
+        m\\
+        k
+    \end{pmatrix}x^k\quad\mbox{(Clearly)}\\
+    &\alpha\notin\N^+:f^{(k)}(x)= \alpha\dots(\alpha-k+1)(1+x)^{\alpha-k}\implies\mbox{ The Taylor Series of }f(x)\mbox{ at }x=0\mbox{ is: }\infsum\begin{pmatrix}
+        \alpha\\
+        n
+    \end{pmatrix}x^n\\
+    &\limninf\left|\dfrac{\begin{pmatrix}
+        \alpha\\
+        n+1
+    \end{pmatrix}}{\begin{pmatrix}
+        \alpha\\
+        n
+    \end{pmatrix}}\right|=\limninf\left|\frac{\alpha-n}{n+1}\right|=1\implies R=1\quad\mbox{(D'Alembert Test)}\implies\\
+    &r_n(x)=\frac{f^{(n+1)}(\theta x)}{n!}(1-\theta)^nx^{n+1}=(n+1)\begin{pmatrix}
+    \alpha\\
+    n+1
+    \end{pmatrix}x^{n+1}\left(\frac{1-\theta}{1+\theta x}\right)^n(1+\theta x)^{\alpha-1}\\
+    &\clear\infsum(n+1)\begin{pmatrix}
+    \alpha\\
+    n+1
+    \end{pmatrix}x^{n+1}\mbox{ has convergent radius 1},\\
+    &\theta\in[0,1],x\in(-1,1)\implies\left(\frac{1-\theta}{1+\theta x}\right)\in[0,1],\quad(1+\theta x)^{\alpha-1}\in(0,\max\{(1+|x|)^{\alpha-1},(1-|x|)^{\alpha-1}\}]\\
+    &\implies\limninf r_n(x)=0,\,x\in(-1,1)\\
+    &\mbox{Now we consider }x=\pm1,\quad \sum_{n=0}^\infty\begin{pmatrix}
+    \alpha\\
+    n
+    \end{pmatrix}(\pm1)^n:=\sum_{n=0}^\infty u_n\\
+    &\begin{cases}
+        (i)\,&\alpha\in(-\infty,-1]:|u_n|=\left|\begin{pmatrix}
+        \alpha\\
+        n
+        \end{pmatrix}\right|\geq1\implies\sum\limits_{n=0}^\infty u_n\mbox{ diverges}\implies\mbox{ the convergent domain is: }(-1,1)\\
+        (ii)\,&\alpha\in(-1,0),x=1:\sum\limits_{n=0}^\infty u_n\mbox{ is a alternating series and:}\\
+        &|u_n|=\left|\prod\limits_{k=1}^n\dfrac{\alpha-(k-1)}{k}\right|=\prod\limits_{k=1}^n\dfrac{(k-1)-\alpha}{k}=\prod\limits_{k=1}^n\left(1-\dfrac{1+\alpha}{k}\right)\implies|u_{n+1}|=|u_n|\cdot\dfrac{\alpha-n}{n+1}\implies\\
+        &|u_n|\searrow\land|u_n|\to0\,(n\to\infty)\quad(\mbox{Prove }|u_n|\to0\mbox{ as an exercise})\implies\sum\limits_{n=0}^\infty u_n\mbox{ converges}\\
+        &x=-1\implies u_n>0\implies|u_n|=|\alpha|\cdot\dfrac{1-\alpha}{1}\cdot\dfrac{2-\alpha}{2}\cdot\,\dots\,\cdot\dfrac{n-1-\alpha}{n-1}\cdot\dfrac{1}{n}>\dfrac{|\alpha|}{n}\implies\sum\limits_{n=0}^\infty u_n\mbox{ diverges}\\
+        &\implies\mbox{ the convergent domain is: }(-1,1]\\
+        (iii)\,&\alpha\in(0,+\infty):\limninf n\left(\dfrac{|u_n|}{|u_{n+1}|}-1\right)=\limninf n\left(\dfrac{n+1}{|n-\alpha|}-1\right)=\limninf \dfrac{n(1+\alpha)}{n-\alpha}=1+\alpha>1\\
+        &\implies\sum\limits_{n=0}^\infty u_n\ucov S(x)\implies\mbox{ the convergent domain is: }[-1,1]
+    \end{cases}\\
+    (7)\,&\mbox{Prove as an exercise (Hint: Same method as (4), then use the Raabe Test for the boundary values)}
+\end{split}
+\end{equation}
+From (7), we have another expression of $\pi:\,\dfrac{\pi}{2}=1+\infsum\dfrac{(2n-1)!!}{(2n)!!}\cdot\dfrac{1}{2n+1}$\\
+\textbf{Cauchy product:}
+$$\mbox{Let} f(x)=\sum_{n=0}^\infty a_nx^n,g(x)=\sum_{n=0}^\infty b_nx^n\mbox{ then: }f(x)g(x)=\left(\sum_{n=0}^\infty a_nx^n\right)\left(\sum_{n=0}^\infty b_nx^n\right)=\sum_{n=0}^\infty c_nx^n$$
+$$\mbox{where}\,c_n=\sum_{k=0}^n a_kb_{n-k}\mbox{, whenever}\,|x|<\min\{R_f,R_g\}$$
+Furthermore, when $b_0\neq0$, let $\dfrac{f(x)}{g(x)}=\sum\limits_{n=0}^\infty c_nx^n$, then: $\left(\sum\limits_{n=0}^\infty b_nx^n\right)\left(\sum\limits_{n=0}^\infty c_nx^n\right)=\sum\limits_{n=0}^\infty a_nx^n$
+$$\implies a_0=b_0c_0,\quad b_0c_1+b_1c_0=a_1,\quad b_0c_2+b_1c_1+b_2c_0=a_2\cdots\mbox{ hence, we can derive all the coefficients $c_k$}$$
+For $f(g(x))$, we can also use substitution of Taylor Series', however, the convergent domain would often be unobtainable without without more advanced tools\\
+\textbf{Example of substitution:}
+$$\mbox{It is known that: }\frac{\sin x}{x}=\sum_{n=0}^\infty(-1)^n\frac{x^{2n}}{2n+1},\quad\ln(1+u)=\infsum(-1)^{n-1}\frac{u^n}{n}\mbox{ thus: }\ln\frac{\sin x}{x}=-\frac{x^2}{6}-\frac{x^4}{180}-\cdots$$
+$$\mbox{We also know that: }\frac{\sin x}{x}=\infprod\left(1-\frac{x^2}{n^2\pi^2}\right)\mbox{ thus: }\ln\frac{\sin x}{x}=\ln\infprod\left(1-\frac{x^2}{n^2\pi^2}\right)=\infsum\ln\left(1-\frac{x^2}{n^2\pi^2}\right)$$
+$$=-\infsum\left(\sum_{m=1}^\infty(-1)^{m-1}\dfrac{\left(\dfrac{x^2}{n^2\pi^2}\right)^m}{m}\right)=-\sum_{m=1}^\infty\left(\infsum(-1)^{m-1}\dfrac{\left(\dfrac{x^2}{n^2\pi^2}\right)^m}{m}\right)$$
+Comparing the coefficients of the two forms, we get: $\infsum\dfrac{1}{n^2}=\dfrac{\pi^2}{6},\quad\infsum\dfrac{1}{n^4}=\dfrac{\pi^4}{90}$
+\subsection{Approximating Continuous Functions with Polymonials}
+\textbf{Definition: $f(x)$ is Uniformly Approximable}$\quad(\mathbb{P}:= \mbox{The set of all polynomials})$ $$\iff\exists\{P_n(x)\}\subset\mathbb{P}\st\{P_n(x)\}\ucov f(x)\iff\forall\varepsilon>0,\exists P(x)\st|P(x)-f(x)|<\varepsilon,\quad x\in[a,b]$$
+\textbf{Stone-Weierstrass Theorem}
+$$f(x)\mbox{ is continuous }\implies\forall\varepsilon>0,\exists P(x)\st|P(x)-f(x)|<\varepsilon,\quad x\in[a,b]$$
+\textbf{The Bernstein Polynomial:}
+$$\wlg[a,b]=[0,1],\mbox{ let }\mathbb{X}\mbox{ be set of all continuous functions on }[0,1]$$
+$$B_n:\mathbb{X}\to\mathbb{P}\,|\,f(t)\mapsto B_n(f,x)=\sum_{k=0}^nf\left(\frac{k}{n}\right)\begin{pmatrix}
+n\\
+k
+\end{pmatrix}x^k(1-x)^{n-k},\quad(B_n(f,x)\mbox{ is the \textbf{Bernstein Polynomial} of }f)$$
+\begin{equation}
+\begin{split}
+    (1)\,&B_n(x)\mbox{ is a linear map, as }\forall f,g\in\mathbb{X},\forall\alpha,\beta\in\mathbb{R}:B_n(\alpha f+\beta g,x)=\alpha B_n(f,x)+\beta B_n(g,x)\\\
+    (2)\,&B_n(x)\mbox{ is monotonic, as }\forall f,g\in\mathbb{X}:(\forall t\in[0,1]:f(t)\geq g(t)\implies B_n(f,x)\geq B_n(g,x))\\
+    (3)\,&\forall x\in[0,1]:\\
+    &B_n(1,x)=\sum_{k=0}^n\begin{pmatrix}
+        n\\
+        k
+    \end{pmatrix}x^k(1-x)^{n-k}=[x+(1-x)]^n=1\\
+    &B_n(t,x)=\sum_{k=0}^n\frac{k}{n}\begin{pmatrix}
+        n\\
+        k
+    \end{pmatrix}x^k(1-x)^{n-k}=x\sum_{k=1}^n\begin{pmatrix}
+        n-1\\
+        k-1
+    \end{pmatrix}x^{k-1}(1-x)^{n-k}=x[x+(1-x)]^{n-1}=x\\
+    &B_n(t^2,x)=\sum_{k=0}^n\frac{k^2}{n^2}\begin{pmatrix}
+        n\\
+        k
+    \end{pmatrix}x^k(1-x)^{n-k}=\sum_{k=1}^n\frac{k}{n}\begin{pmatrix}
+        n-1\\
+        k-1
+    \end{pmatrix}x^k(1-x)^{n-k}\\
+    &=\sum_{k=2}^n\frac{k-1}{n}\begin{pmatrix}
+        n-1\\
+        k-1
+    \end{pmatrix}x^k(1-x)^{n-k}+\sum_{k=1}^n\frac{1}{n}\begin{pmatrix}
+        n-1\\
+        k-1
+    \end{pmatrix}x^k(1-x)^{n-k}\\
+    &=\frac{n-1}{n}x^2\sum_{k=2}^n\begin{pmatrix}
+        n-2\\
+        k-2
+    \end{pmatrix}x^{k-2}(1-x)^{n-k}+\frac{x}{n}\sum_{k=1}^n\begin{pmatrix}
+        n-1\\
+        k-1
+    \end{pmatrix}x^{k-1}(1-x)^{n-k}=\frac{n-1}{n}x^2+\frac{x}{n}=x^2+\frac{x-x^2}{n}
+\end{split}
+\end{equation}
+$$\implies B_n((t-s)^2,x)=B_n(t^2,x)-2sB_n(t,x)+s^2B_n(1,x)=x^2+\frac{x-x^2}{n}-2sx+x^2=\frac{x-x^2}{n}+(x-s)^2$$
+\textbf{Proof:}
+$$f(x)\mbox{ is continuous}\implies\exists M>0\st\forall t\in[0,1]:|f(t)|<M$$
+$$f(x)\mbox{ is uniformly continuous}\implies\forall\varepsilon>0,\exists\delta>0\st\forall t,s\in[0,1]\mbox{ when }|t-s|<\delta:|f(t)-f(s)|<\frac{\varepsilon}{2}$$
+$$|t-s|\geq\delta:|f(t)-f(s)|\le2M\le\frac{2M}{\delta^2}(t-s)^2\implies\forall t,s\in[0,1]:-\frac{\varepsilon}{2}-\frac{2M}{\delta^2}(t-s)^2\le f(t)-f(s)\le\frac{\varepsilon}{2}+\frac{2M}{\delta^2}(t-s)^2$$
+$$\implies\forall x,s\in[0,1]:-\frac{\varepsilon}{2}-\frac{2M}{\delta^2}\left[\frac{x-x^2}{n}+(x-s)^2\right]\le B_n(f,x)-f(s)\le\frac{\varepsilon}{2}+\frac{2M}{\delta^2}\left[\frac{x-x^2}{n}+(x-s)^2\right]$$
+$$\mbox{let }s=x,\mbox{ as }x(1-x)\le\frac{1}{4}:\left|\sum_{k=0}^nf\left(\frac{k}{n}\right)\begin{pmatrix}
+n\\
+k
+\end{pmatrix}x^k(1-x)^{n-k}-f(x)\right|\le\frac{\varepsilon}{2}+\frac{M}{2n\delta^2}\le\varepsilon,\quad\left(\mbox{let }N=\left\lceil\frac{M}{\delta^2\varepsilon}\right\rceil\right)$$
+\null\hfill{$\square$}\\
+This proof feels overly complicated. Why can't I apply u.c. and restrict $s$ based on $t$?
+\clearpage
+\section{Limits and Continuity on Euclid Space}
+\subsection{Basic Theorems on Euclid Space}
+\subsubsection{Basic Definitions}
+All definitions here follows from Linear Algebra\\
+\textbf{Definition: Limit}
+$$\forall\{x_k\}\subset\R^n:\lim_{k\to\infty}{x}_k={\bf{a}}:={\bf{a}}\in\R^n\st\forall\varepsilon\in\R^+,\exists K\in\N^+\st\forall k>K \,(k\in\N^+):|{x}_k-{\bf{a}}|<\varepsilon$$
+\textbf{Definition: Bounded set}
+$$\forall S\subset\R^n:S\mbox{ is bounded}:=\exists M\in\R\st\forall{\bf{x}}\in S:||{\bf{x}}||\le M,\quad \forall\delta\in\R^+:O(x,r):=\{y\mid |x-y|<r\}$$
+\subsubsection{Open and Closed Set}
+$S\subset\R^n$, then: $\forall x\in R^n:$ one and only one of the following is true
+\begin{equation}
+\begin{split}
+    (1)\,&\exists\delta\in\R^+\st O(x,\delta)\subset S,\,S^O:=\{x\mid(1)\}\implies x\mbox{ is an interior point of }S, S^O\mbox{ is the interior of }S\\
+    (2)\,&\exists\delta\in\R^+\st O(x,\delta)\subset S^C:=R^n\symbol{92}S\implies x\mbox{ is an exterior point of }S\\
+    (3)\,&\forall\delta\in\R^+:\exists x_1,x_2\in O(x,\delta)\st (x_1\in S)\land(x_2\notin S)\implies x\mbox{ is a boundry point of }S\\
+    &\{x\mid(3)\}=:\mbox{Boundry of }S=:\partial S
+\end{split}
+\end{equation}
+\textbf{Definition:} Isolated Point
+$$\forall x\in S\subset\R^n\st(\exists\delta\in\R^+\st\forall y\in O(x,\delta):(y=x)\lor(y\notin S))$$
+\textbf{Definition:} Limit Point
+$$\forall x\in\R^n\st\forall\delta\in\R^+:\exists y\in (O(x,\delta)\symbol{92}\{x\})\cap S\iff\exists \mbox{ \textit{infinite} }y\in O(x,\delta)\cap S\iff\exists\{x_k\}\subset S\st\{x_k\}\to x$$
+$$S':=\{x\mid x\mbox{ is a limit point of }S\}$$
+\null\hfill{Prove the equivalences as an exercise}\\
+\textbf{Definition:}
+\begin{equation}
+\begin{split}
+    (1)\,&S\subset R^n\land S=S^O\iff S\mbox{ is an open set}\\
+    (2)\,&S\subset R^n\land S'\subset S\iff S\mbox{ is an closed set}\\
+    (3)\,&S\cup S'=:\mbox{the Closure of }S=:\overline{S}\\
+\end{split}
+\end{equation}
+\textbf{Example:} Balls are open sets
+$$\forall q\in O(a,r),|q-a|<r\implies\exists h>0\st|q-a|<r-h\implies\forall x\in O(q,h):|x-a|\le|x-q|+|q-a|<r$$
+\textbf{Theorem:}
+$$S\mbox{ is a closed set}\iff S^C\mbox{ is an open set}$$
+\textbf{Proof:}
+$$S\mbox{ is a closed set}\iff\left(x\in S'\implies x\in S\right)\iff$$
+$$\left(x\in S^C\implies\exists\delta\in\R^+\st 
+\left(O(x,\delta)\symbol{92}\{x\}\right)\cap S=\emptyset\iff O(x,\delta)\subset S^C\right)$$
+\textbf{Inference:} De Morgan's Law\\
+Let $\{S_\alpha\}\in\R^n\quad(\{S_\alpha\}\mbox{ can be finite for infinite})$ then:
+$$(1)\,\left(\bigcup_\alpha S_\alpha\right)^C=\bigcap_\alpha S_\alpha^C\quad(2)\,\left(\bigcap_\alpha S_\alpha\right)^C=\bigcup_\alpha S_\alpha^C$$
+\null\hfill{(Proof missing, put a proof in to the set theory section)}\\
+\textbf{Theorem:}
+\begin{equation}
+\begin{split}
+    (1)\,&\mbox{For any set of open sets }\{S_n\},\,\bigcup\limits_\alpha S_\alpha\mbox{ is a open set}\\
+    (2)\,&\mbox{For any set of closed sets }\{T_n\},\,\bigcap\limits_\alpha T_\alpha\mbox{ is a closed set}\\
+    (3)\,&\mbox{For any finite number of open sets }S_1,S_2,\dots,S_k:\bigcap_{i=1}^kS_i\mbox{ is a open set}\\
+    (4)\,&\mbox{For any finite number of closed sets }T_1,T_2,\dots,T_k:\bigcup_{i=1}^kT_i\mbox{ is a closed set}
+\end{split}
+\end{equation}
+\textbf{Proof:}
+\begin{equation}
+\begin{split}
+    (1)\,&x\in\bigcup_\alpha S_\alpha\implies\exists\alpha_0\st x\in S_{\alpha_0}\subset\bigcup_\alpha S_\alpha,\,S_{\alpha_0}=S_{\alpha_0}^O\subset\left(\bigcup_\alpha S_\alpha\right)^O\implies x\in\left(\bigcup_\alpha S_\alpha\right)^O\\
+    (2)\,&\mbox{Prove as an exercise using De Morgen's law from (1)}\\
+    (3)\,&x\in\bigcap_{i=1}^kS_i\implies\forall i=1,2,\dots,k:x\in S_i\implies\forall i,\exists r_i\st O(x,r_i)\in S_i,r:=\min_{1\le i\le k}(r_i)\implies O(x,r)\in\bigcap_{i=1}^k S_i\\
+    (4)\,&\mbox{Prove as an exercise using De Morgen's law from (3)}
+\end{split}
+\end{equation}
+\textbf{Example:} Countable intersection open sets can be closed
+$$\bigcap_{n\in\N^+}\left(-\frac{1}{n},\frac{1}{n}\right)=[1,1]=1$$
+\subsubsection{Basic Theorems on Euclidean Space}
+\textbf{Theorem:} The Nested Intervals Theorem
+$$\Delta_k:=([a_{1k},b_{1k}],[a_{2k},b_{2k}],\dots,[a_{nk},b_{nk}])\subset\R^n\st$$
+\begin{equation}
+\begin{split}
+    (1)\,&\forall i\in(\N^+\cap[1,n]),\forall k\in\N^+:a_{ik}\le a_{i(k+1)}<b_{i(k+1)}\le b_{ik}\iff\Delta_{k+1}\subset\Delta_k\\
+    (2)\,&\forall i\in(\N^+\cap[1,n]):\lim_{k\to\infty}|a_{ik}-b_{ik}|=0
+\end{split}
+\end{equation}
+$$\implies\lim_{k\to\infty}(a_{1k},a_{2k},\dots,a_{nk})=\lim_{k\to\infty}(b_{1k},b_{2k},\dots,b_{nk})=(x_1,x_2\dots,x_n)$$
+\null\hfill{Prove as an exercise using the single dimension nested intervals theorem}\\
+\textbf{Theorem:} Cantor's Nested Intervals Theorem
+$$\forall S\in\R^n,\diam S:=\sup\{|x-y|\mid x,y\in S\},\,\forall\{S_k\}\st$$
+\begin{equation}
+\begin{split}
+    (1)\,&\forall S_k, S_k\mbox{ is closed}\\
+    (2)\,&R^n\supset S_1\supset S_2\supset\dots\supset S_k\supset S_{k+1}\supset\dots\\
+    (3)\,&\lim_{k\to\infty}\diam S_k=0
+\end{split}
+\end{equation}
+$$\mbox{There is: }\bigcap_{k=1}^\infty S_k=\{x\}\,(x\in\R^n)$$
+\textbf{Proof:}\\
+Clearly, diam$\bigcap\limits_{k=1}^\infty S_k=0$. Pick a point $x_k\in S_k,\,\{x_k\}$ forms a Cauchy sequence thus converges.
+$$\forall j,k\in\N^+:x_{k+j}\in S_{k+j}\subset\dots\subset S_k\implies\forall k\in\N^+:\lim_{n\to\infty}x_n=x\in S_k'\subset S_k\implies\forall k\in\N^+:x\in S_k\implies x\in\bigcap_{k=1}^\infty S_k$$\\
+\textbf{Example:} Prove the medians of a triangle meet at the a single point (The proof is not provided, Tikz is complicated)\\
+\textbf{The Bolzano-Weistrass Theorem:}
+$$\forall\{x_k\}\subset O(\0,r)\subset\R^n\,(r\in\R):\exists\{x_{k_l}\}\in\{x_k\}\st\lim_{l\to\infty}\{x_{k_l}\}=x\in\R^n$$
+\null\hfill{Prove as an exercise}\\
+\textbf{Inference:} there exists least a limit point on any bounded infinite set on $R^n$ (Clearly)\\
+\textbf{The Cauchy Convergence Criterion}
+$$\{x_k\}\mbox{ converges}\iff\{x_k\}\mbox{ is a basic sequence}$$
+\null\hfill{Prove as an exercise}
+\subsubsection{Compact Set}
+$$\forall S\subset\R^n,\forall\{U_\alpha\}\st\left(\bigcup_\alpha U_\alpha\supset S\right)\land(\forall U_\alpha\in\{U_\alpha\}\mbox{ is a open set}):\{U_\alpha\}\mbox{ is a \textbf{open cover} of }S$$
+$$\forall\mbox{ open cover }\{U_\alpha\}\mbox{ of }S,\exists\{U_{\alpha_i}\}_{i=1}^p\subset\{U_\alpha\}\st S\subset\bigcup_{i=1}^p S_{\alpha_i}=:S\mbox{ is a compact set}$$
+\textbf{The Heine-Borel Theorem}\\
+$\forall S\subset\R^n$, the following are equivalent:
+\begin{equation}
+\begin{split}
+    (1)\,&S\mbox{ is a bounded closed set}\\
+    (2)\,&S\mbox{ is a compact set}\\
+    (3)\,&\mbox{Any infinite subset of }S\mbox{ contain a limit point in }S
+\end{split}
+\end{equation}
+\textbf{Proof:}
+\begin{equation}
+\begin{split}
+    (1)\implies(2):\,&\mbox{Assume }S\mbox{ to be closed bounded and not compact}\implies\\
+    &\exists\mbox{ a open cover }\{U_\alpha\}\mbox{ that doesn't contain a finite sub-cover}\\
+    &S\mbox{ is bounded}\implies S\subset([a_1,b_1],[a_2,b_2],\dots,[a_n,b_n])=:I^1,\mbox{ we can decompose }I^1\mbox{ into:}\\
+    &I_{00\dots0}^1,I_{10\dots0}^1,\dots,I_{11\dots1}^1\st I_{00\dots0}^1=\left(\left[a_1,\frac{a_1+b_1}{2}\right],\left[a_2,\frac{a_2+b_2}{2}\right],\dots,\left[a_n,\frac{a_n+b_n}{2}\right]\right)\\
+    &I_{10\dots0}^1=\left(\left[\frac{a_1+b_1}{2},b_1\right],\left[a_2,\frac{a_2+b_2}{2}\right],\dots,\left[a_n,\frac{a_n+b_n}{2}\right]\right)\\
+    &I_{11\dots1}^1=\left(\left[\frac{a_1+b_1}{2},b_1\right],\left[\frac{a_2+b_2}{2},b_2\right],\dots,\left[\frac{a_n+b_n}{2},b_n\right]\right)\\
+    &\mbox{Clearly, at least one of }I_*^1\cap S\mbox{ is not covered by finite elements of }\{U_\alpha\},\, I^2:=I_*^1\\
+    &\mbox{Apply the above proces repeatedly, we get: }I^1\supset I^2\supset\dots\clear\lim_{l\to\infty}\diam(I^l\cap S)=\emptyset\\
+    &\implies\exists! a\in\bigcap_{l=1}^\infty(I_l\cap S)\implies\exists U_*\st a\in U_*\in\{U_\alpha\}\\
+    &\clear\exists r\st O(a,r)\in U_*,\exists l\st I_l\cap S\subset O(a,r)\in U_*\\
+    &\mbox{Contradiction, as }I_l\mbox{ was assumed to be uncoverable with a finite number of }U_\alpha\\
+    (2)\implies(1):\,&\mbox{Clearly, all compact sets are bounded}\\
+    &\neg(1)\implies\exists\mbox{ limit point }a\notin S,\,U_n:=\left\{x\,\middle\vert\,|x-a|>\frac{1}{n}\right\},\exists\{x_k\}\subset S\,(x_k\neq a)\st\lim_{k\to\infty}x_k=a\\
+    &\implies\forall m\in\N^+,U_m\mbox{ contains a finite number of }x_k\implies\mbox{ there is no finite sub-cover of }S\mbox{ in }\{U_n\}\\
+    (1)\implies(3):\,&\mbox{Prove as an exercise}\\
+    (3)\implies(1):\,&\mbox{Assume (3) to be true.}\\
+    &\mbox{Take limit point }x\mbox{ of }S\mbox{ and an arbituary convergent sequence }\{x_k\}\subset S\st\lim_{k\to\infty}x_k=x.\\
+    &x\mbox{ is the only limit point of }\{x_k\}\implies x\in S.\mbox{ Now assume }S\mbox{ to be unbounded, then: }\\
+    &\exists\{x_k\}\subset S\st\forall k\in\N^+:||x_k||>k\mbox{, clearly, }\{x_k\}\mbox{ has no limit point (contradiction)}
+\end{split}
+\end{equation}
+\subsection{Multi-variable Continuity}
+\subsubsection{Multi-variable Functions}
+\textbf{Definitions:}
+$$\mbox{Assume: }D\subset R^n,f:D\to\R,\,x\mapsto z$$
+Then $z=f(x)$ is a $n$ variable function, $D$ is the domain of $f$, $f(D):=\{z\in\R\mid z=f(x)\land x\in D\}$ is the co-domain of $f$, $\Gamma:=\{(x,z)\in\R^{n+1}\mid z=f(x)\land x\in D\}$ is the image of $f$
+\subsubsection{Simultaneous Limits}
+\textbf{Definition: Simultaneous Limit}
+$$\forall D\subset\R^n\st D\mbox{ is open, }x^*:=(x_1^*,x_2^*,\dots,x_n^*)\in D,z:=f(x)\mbox{ on }D\symbol{92}\{x^*\}:$$
+$$(\exists A\in\R\st\forall\varepsilon>0,\exists\delta>0\st\forall x\in O(x^*,\delta)\symbol{92}\{x^*\}:|f(x)-A|<\varepsilon)=:\lim_{x\to x^*}f(x)=A$$
+\textbf{Example:}
+\begin{equation}
+\begin{split}
+    (1)\,&f(x_1,x_2)=\frac{x_1x_2}{x_1^2+x_2^2},\,(x_1,x_2)\neq(0,0)\\
+    &\lim_{\substack{{x_1\to0}\\{x_2=0}}}f(x_1,x_2)=\lim_{\substack{{x_2\to0}\\{x_1=0}}}f(x_1,x_2)=0\neq\lim_{
+    \substack{{x\to0}\\{x_2=mx_1}}}f(x_1,x_2)=\lim_{x_1\to0}\frac{mx_1^2}{x_1^2+m^2x_1^2}=\frac{m}{1+m^2}\quad(m\in\R\symbol{92}\{0\})\\
+    (2)\,&f(x_1,x_2)=\frac{(x_2^2-x_1)^2}{x_2^4+x_1^2},\,(x_1,x_2)\neq(0,0)\\
+    &\lim_{\substack{{x_1\to0}\\{x_2=mx_1}}}f(x_1,x_2)=\frac{\left(m^2x_1^2-x_1\right)^2}{m^4x_1^4+x_1^2}=1\neq\lim_{\substack{{x_1\to0}\\{x_2^2=x}}}f(x_1,x_2)=\lim_{x_1\to0}0=0\quad(m\in\R\symbol{92}\{0\})
+\end{split}
+\end{equation}
+\subsubsection{Repeated Limits}
+\textbf{Definition: Double Limit}\\
+Let $D$ be an open set on $\R^2$, $(x_1^*,x_2^*)\in D,y=f(x_1,x_2)$ is a two variable function defined on $D\symbol{92}\{(x_1^*,x_2^*\}$: 
+$$\forall x_2\neq x_2^*,\exists\lim_{x_1\to x_1^*}f(x_1,x_2),\exists\lim_{x_2\to x_2^*}\lim_{x_1\to x_1^*}f(x_1,x_2)\implies\lim_{x_2\to x_2^*}\lim_{x_1\to x_1^*}f(x_1,x_2)\mbox{ is the double limit of }f(x_1,x_2)$$
+with respect to $x_1$ then $x_2$\\
+\textbf{Note:} Simultaneous limit and Repeated limit do not imply each other. Furthermore, the existence of repeated limit in one order does not imply the its existence in another, and even if they both exist, they may not be equal.\\
+\textbf{Theorem:}
+$$\left(\lim_{(x_1,x_2)\to(x_1^*,x_2^*)}f(x_1,x_2)=A\right)\land\left(\forall x_1\neq x_1^*:\lim_{x_2\to x_2^*}f(x_1,x_2)=\varphi(x_1)\right)\implies$$
+$$\lim_{x_1\to x_1^*}\lim_{x_2\to x_2^*}f(x_1,x_2)=\lim_{x_1\to x_1^*}\varphi(x_1)=\lim_{(x_1,x_2)\to(x_1^*,x_2^*)}f(x_1,x_2)=A$$
+\textbf{Proof:}
+$$\forall\varepsilon>0,\exists\delta>0\st\forall(x_1,x_2)\in O((x_1^*,x_2^*),\delta):|f(x_1,x_2)-A|<\frac{\varepsilon}{2}\implies|\varphi(x_1)-A|=\lim_{x_2\to x_2^*}|f(x_1,x_2)-A|\le\frac{\varepsilon}{2}<\varepsilon$$
+Thus, if repeated limit in both orders are equal to the simultaneous limit, then the order of limits are switchable.
+\subsubsection{Continuity of Multi-variable functions}
+\textbf{Definition: Continuity}
+$$D\subset R^n\st D\mbox{ is open, }x^*:=(x_1^*,x_2^*,\dots,x_n^*)\in D,z:=f(x)\mbox{ on }D\symbol{92}\{x^*\}:$$
+$$\forall\varepsilon>0,\exists\delta>0\st\forall x\in O(x^*,\delta):|f(x)-f(x^*)|<\varepsilon$$
+\subsubsection{Vector-valued Functions}
+\textbf{Definition: ${\bf{n}}$ Variable ${\bf{m}}$ Dimensional Vector-valued Function}
+$$D\subset\R^n,f:D\to\R^m,\,x=(x_1,x_2,\dots,x_n)\mapsto z=(z_1,z_2,\dots,z_m)$$
+$$\mbox{Domain}:=D,\,\mbox{Co-Domain}:=\{z\in\R^m\mid z=f(x)\land x\in D\}$$
+Thus, multi-variable functions are vector valued funcitons with $m=1$ and $f=(f_1,f_2,\dots,f_m)$ where $z_i=f_i(x)$\\
+\textbf{Definition: Convergence}
+$$D\subset\R^n\st D\mbox{ is open, },x^*\in D,f:D\symbol{92}\{x^*\}\to\R^m,A\in\R^m:$$
+$$\forall\varepsilon>0,\exists\delta>0\st\forall x\in O(x^*,\delta)\bs\{x^*\}:f(x)\in O(A,\varepsilon)$$
+\textbf{Definition: Continuity}
+$$D\subset\R^n\st D\mbox{ is open, }x^*\in D,f:D\to\R^m:$$
+$$\forall\varepsilon>0,\exists\delta>0\st\forall x\in O(x^*,\delta):f(x)\in O(f(x^*),\varepsilon)$$
+\textbf{Theorem:}
+$$f\mbox{ is continuous at }x^*\iff\forall i=1,2\dots,m:f_i\mbox{ is continuous at }x^*$$
+\null\hfill{Prove as an exercise}\\
+\textbf{Definition: Compound Functions}
+$$\Omega\subset\R^k\st\Omega\mbox{ is open, }D\subset\R^n\st D\mbox{ is open, }g:D\to\R^k,f:\Omega\to\R^m\land g(D)\subset\Omega:$$
+$$f\circ g:D\to\R^m,u\mapsto f(g(u))$$
+\textbf{Theorem:}
+$$g\mbox{ is continuous on }D\land f\mbox{ is continuous on }\Omega\implies f\circ g\mbox{ is continuous on }D$$
+\null\hfill{Prove as an exercise}
+\subsection{Properties of Continuous Functions}
+\subsubsection{Continuous Mapping on Compact sets}
+\textbf{Definition: Continuity}
+$$K\subset\R^n,f:K\to\R^n,x_0\in K,$$
+$$f\mbox{ is continuous on }x_0:=\forall\varepsilon>0,\exists\delta>0\st\forall x\in O(x_0,\delta)\cap K:f(x)\in O(f(x_0),\varepsilon)$$
+\textbf{Theorem: Continuous mappings map compact sets to compact sets}
+$$K\subset\R^n\st K\mbox{ is compact},f: K\to\R^m,\forall\{y_k\}\subset f(K),\forall y_k\in\{y_k\},\exists x_k\in K\st f(x_k)=y_k$$
+$$\implies\exists\{x_{k_l}\}\subset\{x_k\}\st\lim_{k\to\infty}x_{k_l}=a\in K\implies \lim_{l\to\infty}y_{k_l}=\lim_{l\to\infty}f(x_{k_l})=f(a)$$
+\textbf{Definition: Uniform continuity}
+$$K\subset\R^n,f:K\to\R^m,\forall\varepsilon>0,\exists\delta>0\st\forall x',x''\in K\st|x'-x''|<\delta:|f(x')-f(x'')|<\varepsilon$$
+\textbf{Theorem: Continuous mappings on compact sets are uniformly continuous}\\
+\textbf{Proof:}
+$$\forall\varepsilon>0,\forall a\in K,\exists\delta_a>0\st\forall x\in O(a,\delta_a):|f(x)-f(a)|<\frac{\varepsilon}{2}$$
+$$K\in\bigcup_{a\in K}O\left(a,\frac{\delta_a}{2}\right)\implies\exists\{a_k\}\st K\subset\bigcup_{i=1}^{I\in\N^+} O\left(a_i,\frac{\delta_{a_k}}{2}\right)\subset\bigcup_{a\in K}O\left(a,\frac{\delta_a}{2}\right)$$
+$$\delta:=\frac{1}{2}\min_{1\le j\le p}\{\delta_{a_j}\},\forall x',x''\in K\st|x'-x''|<\delta,\exists t\in[1,p]\cap\N\st x'\in O\left(a_t,\frac{\delta_{a_t}}{2}\right)$$
+$$\implies |x''-a_t|\le|x''-x'|+|x'-a_t|<\frac{\delta_{a_t}}{2}+\frac{\delta_{a_t}}{2}=\delta_{a_t}\implies|f(x'')-f(a_t)|<\frac{\varepsilon}{2}\implies$$
+$$|f(x'')-f(x')|\le|f(x'')-f(a_t)|+|f(x')-f(a_t)|<\frac{\varepsilon}{2}+\frac{\varepsilon}{2}<\frac{\varepsilon}{2}$$
+\subsubsection{Connected Sets and Continuous mappings on Continuous Sets}
+\textbf{Definition:}\\
+If $S\subset\R^n,\gamma:[0,1]\to\R^n,\gamma([0,1])\subset S\,\land\,\gamma$ is continuous, then:
+$$\gamma\mbox{ is a path on }S,\,\gamma(0)\mbox{ is the initial point, }\gamma(1)\mbox{ is the terminal point}$$
+$S$ is a connected set $:=\forall x,y\in S,\exists$ path from $x$ to $y$\\
+\textbf{Definition:} Open region := connected open set, closed region := closure of open regions\\
+\textbf{Theorem: Continuous mappings map connected sets to connected sets}\\
+\textbf{Proof:}
+$$D\subset\R^n\,(D\mbox{ is connected, })f:D\to\R^m\mbox{ is a continuous map}\implies$$
+$$\forall X,Y\in f(D),\exists x,y\in D\st f(x)=X,f(y)=Y\implies\exists\gamma:[0,1]\to D\st\gamma(0)=x,\gamma(1)=y\implies$$
+$$f\circ\gamma([0,1])\subset f(D)\land f\circ\gamma(0)=X,f\circ\gamma(1)=Y$$
+\section{Multi-variable differentials}
+\subsection{Partial Differentials and Total Differentials}
+\subsubsection{Partial Derivatives}
+\subsubsection{Directional Derivatives}
+\subsubsection{Higher Order Partial Derivatives}
+\subsubsection{Higher Order Differentials}
+\subsection{Derivation rules of multivariate composite functions}
+\subsection{Intermediate Value Theorem and Taylor Formula}
+\subsection{Implicit Functions}
+\subsection{Application of Partial Derivatives in Geometry}
+\subsection{Unconditional Extremum}
+\subsection{Conditional Extremum and Lagrangian Multipliers}
+\section{Multiple Integral}
+\subsection{Multiple Integrals on Bounded Closed Regions}
+\subsection{Properties and Computation of Multiple Integrals}
+\subsection{Substitution of Multiple Integrals}
+\subsection{Improper Multiple Integrals}
+\subsection{Differential Forms}
+\section{Line Integral, Surface Integral and Basic Field Theory}
+\subsection{First Type Line Integrals and Surface Integrals}
+\subsection{Second Type Line Integrals and Surface Integrals}
+\subsection{Green's Theorem, Gauss' Theorem, Stokes' Theorem}
+\subsection{Differential Forms and Outer Derivative}
+\subsection{Introductory Field Theory}
+\section{Integral with Parametric Variables}
+\subsection{Parametric Proper Integrals}
+\subsection{Parametric Improper Integrals}
+\subsection{Euler Integral}
+\section{Fourier Series}
+\end{document}
